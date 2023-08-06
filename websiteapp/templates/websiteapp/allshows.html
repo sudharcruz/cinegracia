@@ -1,0 +1,957 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Cinegracia - All Shows{% endblock %}</title>
+
+  <!-- 
+    - favicon
+  -->
+  <link rel="shortcut icon" href="{% static 'cinelogo.png' %}" type="image">
+
+  <!-- 
+    - custom css link
+  -->
+  <link rel="stylesheet" href="{% static 'ass/css/style.css' %}">
+  
+  
+
+
+  <!-- 
+    - google font link
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body id="top">
+
+
+  <!-- 
+    - #HEADER
+  -->
+{% block header %}
+  <header class="header" data-header>
+    <div class="container">
+
+      
+
+      <a href="/" class="logo">
+        <div class="coontainer">
+        <img src="{% static 'cinelogo.png'%}" alt="Cinegracia" width="75" height="75" >
+        <p class="hero-subtitle-for">Cinegracia</p>
+        </div>
+        <style>
+          .coontainer{
+            display: flex;
+            align-items: center;
+            margin-right: 10px;
+          }
+          .hero-subtitle-for {
+              margin-right: 20px;
+              color: var(--citrine);
+              font-size: var(--fs-4);
+              font-weight: var(--fw-700);
+              margin-bottom: 0px;
+              margin-left: 5px;
+            }
+
+        </style>
+      </a>
+      <button class="menu-open-btn" data-menu-open-btn>
+        <ion-icon name="reorder-two"></ion-icon>
+      </button>
+
+      <nav class="navbar" data-navbar>
+
+        <div class="navbar-top">
+
+          <a href="/" class="logo">
+            <div class="coontainer">
+            <img src="{% static 'cinelogo.png'%}" alt="Cinegracia" width="75" height="75" >
+            <p class="hero-subtitle-for">Cinegracia</p>
+            </div>
+          </a>
+
+          <button class="menu-close-btn" data-menu-close-btn>
+            <ion-icon name="close-outline"></ion-icon>
+          </button>
+          
+        </div>
+        <ul class="navbar-list">
+          
+          <li>
+            
+            <a class="navbar-link" href="/" >Home</a>
+          </li>
+        </ul>
+
+
+        
+
+        <div class="search-container">
+            <input type="search" class="btn btn-primary" placeholder="Enter Search" aria-label="search" name="searched" id="searched" style="size: 50px;border-radius: 25px;font-size: small;">
+            <button type="button" onclick="searchMovies()" class="but">Search</button>
+        </div>
+        <style>
+        .but {
+          background-color: #00ffd9; 
+          color: #0a0a0a; 
+          padding: 8px 20px;
+          border: solid var(--black);
+          border-radius: 50px;
+          cursor: pointer;
+          transition: background-color 0.3s;
+          margin-left: 15px;
+          font-size: large;
+          font-weight:bold;
+      }
+      
+      .but:hover {
+          background-color: var(--citrine); /* Set your desired background color on hover */
+      }
+      </style>
+       <script>
+         function searchMovies() {
+              const searchedValue = document.getElementById('searched').value.trim();
+              if (searchedValue.length > 0) {
+                  window.location.href = `{% url 'websiteapp:allshows' section='search' id=5 %}?searched=${encodeURIComponent(searchedValue)}`;
+              }
+          }
+       </script>
+
+        <div class="lang-wrapper">
+          <label for="language">
+            <ion-icon name="globe-outline"></ion-icon>
+          </label>
+        </div>
+      {% if user.is_authenticated %}
+        <li><a class="btn btn-primary" href="{% url  'register:logout'  %}">Logout</a></li>
+      {% else %}
+      <li><a class="btn btn-primary" href="{% url 'register:register' %}">Sign-Up</a></li>
+      {% endif %}
+        </ul>
+
+
+
+      
+      </nav>
+      <style>
+        @media(min-width:1200px){
+          .navbar{
+            display: none;
+          }
+        }
+      </style>
+      
+      <div class="all">
+        {% if section == 'movie' %}
+        
+          {% block tits %}
+            <ul class="navbar-list">
+
+              <div class="title-wrapper">
+                <a class="hero-subtitle-for">Here You Can Find All Movies</a>
+              </div>
+          {% endblock %}
+        
+        {% elif section == 'upcoming' %}
+          <ul class="navbar-list">
+
+            <div class="title-wrapper">
+              <a class="hero-subtitle-for">Here You Can Find All Upcoming Movies</a>
+            </div>
+        {% elif section == 'series' %} 
+            <ul class="navbar-list">
+
+              <div class="title-wrapper">
+                <a class="hero-subtitle-for">Here You Can Find All Series</a>
+              </div>
+        {% elif section == 'anime' %} 
+            <ul class="navbar-list">
+
+              <div class="title-wrapper">
+                <a class="hero-subtitle-for">Here You Can Find All Animes</a>
+              </div>
+        {% else %} 
+        {% endif %}
+
+      </div>
+      <style>
+        @media(min-width:1200px){
+          .all{
+            display: flex;
+            margin-right: 500px;
+          }
+        }
+        @media (max-width:768px){
+          .all{
+            display: none;
+          }
+        }
+      </style>
+    </div>
+  </header>
+{% endblock %}
+
+ 
+
+
+  <main>
+    <article>
+
+     <!-- 
+        - #UPCOMING
+      -->
+      
+      <section class="upcoming">
+        <style>
+          .upcoming {
+                  background: url("{%static 'ass/assets/images/upcoming-bg.png' %}") no-repeat;
+                  background-size: cover;
+                  background-position: center;
+                  padding-block: var(--section-padding);
+                  object-fit: none;
+          }
+
+        </style>
+{% block content %}
+  {% if section == 'upcoming' %}
+      <div class="center">
+        <h2 class="h2 section-title">Upcoming Movies</h2>
+      </div>
+        <br>
+        <div class="container">
+
+         
+
+          <ul class="movies-list  ">
+    
+      {% for det in det %}
+        
+            <li>
+              <div class="movie-card">
+             
+                <a href="{%  url 'websiteapp:movie-details' det.moviename det.id %}">
+             
+                  <figure class="card-banner">
+                    <img src={{det.image.url}} alt="The Northman movie poster">
+                  </figure>
+                  
+                </a>
+
+                <div class="title-wrapper">
+                  
+                  <a href="{%  url 'websiteapp:movie-details' det.moviename|slugify det.id %}">
+                    <h3 class="card-title">{{det.moviename}}</h3>
+                  </a>
+
+                  <time datetime="2022">{{det.release}}</time>
+                </div>
+
+                <div class="card-meta">
+                  <div class="badge badge-outline">HD</div>
+
+                  <div class="duration">
+                    <ion-icon name="time-outline"></ion-icon>
+
+                    <time datetime="PT137M">{{det.Duration}}</time>
+                  </div>
+
+                  <div class="rating">
+                    <ion-icon name="star"></ion-icon>
+
+                  <data>{{det.Rating}}</data>
+                  </div>
+                </div>
+                  
+              </div>
+            </li>
+      {% endfor %}
+       
+        </div>
+      </section>
+      
+
+
+
+
+
+      <!-- 
+        - #SERVICE
+      -->
+
+      <section class="upcoming">
+        <style>
+          .service {
+                background: url("{%static 'ass/assets/images/service-bg.jpg' %}") no-repeat;
+                background-size: cover;
+                background-position: center;
+                padding-block: var(--section-padding);
+}
+        </style>
+
+
+
+
+      <!-- 
+        - #TOP RATED
+      -->
+  {% elif section == 'movie' %}
+      
+      <section class="top-rated">
+
+      <div class="center">
+        <h2 class="h2 section-title">Top Movies</h2>
+      </div>
+      <style>
+        
+      </style>
+      <br>
+        <div class="container">
+
+          <ul class="movies-list">
+      {% for fut in movies %}
+            <li>
+              <div class="movie-card">
+        
+                <a href="{%  url 'websiteapp:movie-details' fut.title fut.id  %}">
+                  <figure class="card-banner">
+                    <img src="{{fut.poster_path}}" alt="Sonic the Hedgehog 2 movie poster">
+                  </figure>
+                </a>
+
+                <div class="title-wrapper">
+                  <a href="{%  url 'websiteapp:movie-details' fut.title fut.id %}">
+                    <h3 class="card-title">{{fut.title}}</h3>
+                  </a>
+
+                  <time datetime="2022">{{fut.release_date}}</time>
+                </div>
+
+                <div class="card-meta">
+                  <div class="badge badge-outline">2K</div>
+
+                  <div class="duration">
+                    <ion-icon name="time-outline"></ion-icon>
+
+                    <time datetime="PT122M">{{fut.popularity}}</time>
+                  </div>
+
+                  <div class="rating">
+                    <ion-icon name="star"></ion-icon>
+
+                    <data>{{fut.vote_average}}</data>
+                  </div>
+                </div>
+
+              </div>
+            </li>
+
+      {% endfor %}    
+      
+        </div>
+        <div class="pagination">
+          <span class="step-links">
+              {% if movies.has_previous %}
+                  <a href="?page=1">&laquo; first</a>
+                  <a href="?page={{ movies.previous_page_number }}">previous</a>
+              {% endif %}
+      
+              <span class="current">
+                  Page {{ movies.number }} of {{ movies.paginator.num_pages }}
+              </span>
+      
+              {% if movies.has_next %}
+                  <a href="?page={{ movies.next_page_number }}">next</a>
+                  <a href="?page={{ movies.paginator.num_pages }}">last &raquo;</a>
+              {% endif %}
+          </span>
+        </div>
+      </section>
+
+
+
+
+
+    
+  
+  {% elif section == 'series' %} 
+      <section class="upcoming">
+        <div class="center">
+          <h2 class="h2 section-title">World Best TV Series</h2>
+        </div>
+        <br>
+        <style>
+          .tv-series {
+                        background: url("{%static 'ass/assets/images/tv-series-bg.jpg' %}") no-repeat;
+                        background-size: cover;
+                        background-position: center;
+                        padding-block: var(--section-padding);
+                      }
+
+        </style>
+        <div class="container">
+
+          <ul class="movies-list">
+        {% for fut in serie %}
+              <li>
+                <div class="movie-card">
+          
+                  <a href="{%  url 'websiteapp:movie-details' fut.title fut.id  %}">
+                    <figure class="card-banner">
+                      <img src="{{fut.poster_path}}" alt="Sonic the Hedgehog 2 movie poster">
+                    </figure>
+                  </a>
+
+                  <div class="title-wrapper">
+                    <a href="{%  url 'websiteapp:movie-details' fut.title fut.id %}">
+                      <h3 class="card-title">{{fut.title}}</h3>
+                    </a>
+
+                    <time datetime="2022">{{fut.release_date}}</time>
+                  </div>
+
+                  <div class="card-meta">
+                    <div class="badge badge-outline">2K</div>
+
+                    <div class="duration">
+                      <ion-icon name="time-outline"></ion-icon>
+
+                      <time datetime="PT122M">{{fut.popularity}}</time>
+                    </div>
+
+                    <div class="rating">
+                      <ion-icon name="star"></ion-icon>
+
+                      <data>{{fut.vote_average}}</data>
+                    </div>
+                  </div>
+
+                </div>
+              </li>
+        {% endfor %}  
+        </div> 
+        <div class="pagination">
+          <span class="step-links">
+              {% if serie.has_previous %}
+                  <a href="?sage=1">&laquo; first</a>
+                  <a href="?sage={{ serie.previous_page_number }}">previous</a>
+              {% endif %}
+      
+              <span class="current">
+                  Page {{ serie.number }} of {{ serie.paginator.num_pages }}
+              </span>
+      
+              {% if serie.has_next %}
+                  <a href="?sage={{ serie.next_page_number }}">next</a>
+                  <a href="?sage={{ serie.paginator.num_pages }}">last &raquo;</a>
+              {% endif %}
+          </span>
+        </div> 
+      </section>
+  {% elif section == 'collection' %} 
+      <section class="upcoming">
+      <div class="center">
+        <h2 class="h2 section-title">Collection</h2>
+      </div>
+        <br>
+        <div class="container">
+          <ul class="movies-list">
+      {% for ani in coll %}
+            <li>
+              <div class="movie-card">
+        
+                <a href="{% url 'websiteapp:collection' ani.id %}">
+                  <figure class="card-banner">
+                    <img src="{{ani.backdrop_path}}" alt="Sonic the Hedgehog 2 movie poster">
+                  </figure>
+                </a>
+
+                <div class="title-wrapper">
+                  <a href="{% url 'websiteapp:collection' ani.id %}">
+                    <h3 class="card-title">{{ani.name}}</h3>
+                  </a>
+
+                  <time datetime="2022">{{ani.release}}</time>
+                </div>
+
+                <div class="card-meta">
+                  <div class="badge badge-outline">2K</div>
+
+                  <div class="duration">
+                    <ion-icon name="time-outline"></ion-icon>
+
+                    <time datetime="PT122M">{{ani.duration}}</time>
+                  </div>
+
+                  <div class="rating">
+                    <ion-icon name="star"></ion-icon>
+
+                    <data>{{ani.rating}}</data>
+                  </div>
+                </div>
+
+              </div>
+            </li>
+
+      {% endfor %} 
+      <div class="pagination">
+        <span class="step-links">
+            {% if coll.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ coll.previous_page_number }}">previous</a>
+            {% endif %}
+    
+            <span class="current">
+                Page {{ coll.number }} of {{ coll.paginator.num_pages }}
+            </span>
+    
+            {% if coll.has_next %}
+                <a href="?page={{ coll.next_page_number }}">next</a>
+                <a href="?page={{ coll.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+      </div> 
+  {% elif section == 'movie-trend' %}
+      <section class="top-rated">
+        <div class="container">
+          
+          <center><strong><h2 class="h2 section-title">Today's Trending Movies</h2></strong></center><br><br>
+  
+        <ul class="movies-list">
+          {% for la in trend_movie %}
+              <li>
+                  <div class="movie-card">
+                      <a href="{%  url 'websiteapp:movie-details' la.title la.id %}">
+                          <figure class="card-banner">
+                              <img src="https://image.tmdb.org/t/p/w500{{la.poster_path}}" alt="{{la.title}}">
+                          </figure>
+                      </a>
+                      <div class="title-wrapper">
+                          <a href="{%  url 'websiteapp:movie-details' la.title la.id %}">
+                              <h3 class="card-title">{{la.title}}</h3>
+                          </a>
+                          <time datetime="2022">{{la.first_air_date}}</time>
+                      </div>
+                      <div class="card-meta">
+                          <div class="badge badge-outline">2K</div>
+                          <div class="duration">
+                              <ion-icon name="time-outline"></ion-icon>
+                              <time datetime="PT122M">{{la.popularity}}</time>
+                          </div>
+                          <div class="rating">
+                              <ion-icon name="star"></ion-icon>
+                              <data>{{la.vote_average}}</data>
+                          </div>
+                      </div>
+                  </div>
+              </li>
+          {% endfor %}   
+        </ul> <br><br>
+      
+        </div>
+      </section> 
+      {% if trend_movie %}
+                <div class="pagination">
+                  <span class="step-links">
+                      {% if trend_movie.has_previous %}
+                          <a href="?page=1">&laquo; first</a>
+                          <a href="?page={{ trend_movie.previous_page_number }}">previous</a>
+                      {% endif %}
+              
+                      <span class="current">
+                          Page {{ trend_movie.number }} of {{ trend_movie.paginator.num_pages }}.
+                      </span>
+              
+                      {% if trend_movie.has_next %}
+                          <a href="?page={{ trend_movie.next_page_number }}">next</a>
+                          <a href="?page={{ trend_movie.paginator.num_pages }}">last &raquo;</a>
+                      {% endif %}
+                  </span>
+                </div>
+      {% endif %} 
+  {% elif section == 'series-trend' %}
+      <section class="top-rated">
+        <div class="container">
+      
+          <center><strong><h2 class="h2 section-title">Today's Trending Series</h2></strong></center><br><br>
+  
+        <ul class="movies-list">
+          {% for la in trend_serie %}
+              <li>
+                  <div class="movie-card">
+                      <a href="{%  url 'websiteapp:movie-details' la.title la.id %}">
+                          <figure class="card-banner">
+                              <img src="https://image.tmdb.org/t/p/w500{{la.poster_path}}" alt="{{la.title}}">
+                          </figure>
+                      </a>
+                      <div class="title-wrapper">
+                          <a href="{%  url 'websiteapp:movie-details' la.title la.id %}">
+                              <h3 class="card-title">{{la.title}}</h3>
+                          </a>
+                          <time datetime="2022">{{la.first_air_date}}</time>
+                      </div>
+                      <div class="card-meta">
+                          <div class="badge badge-outline">2K</div>
+                          <div class="duration">
+                              <ion-icon name="time-outline"></ion-icon>
+                              <time datetime="PT122M">{{la.popularity}}</time>
+                          </div>
+                          <div class="rating">
+                              <ion-icon name="star"></ion-icon>
+                              <data>{{la.vote_average}}</data>
+                          </div>
+                      </div>
+                  </div>
+              </li>
+          {% endfor %}   
+        </ul> <br><br>
+      
+        </div>
+      </section> 
+      {% if trend_serie %}
+                <div class="pagination">
+                  <span class="step-links">
+                      {% if trend_serie.has_previous %}
+                          <a href="?page=1">&laquo; first</a>
+                          <a href="?page={{ trend_serie.previous_page_number }}">previous</a>
+                      {% endif %}
+              
+                      <span class="current">
+                          Page {{ trend_serie.number }} of {{ trend_serie.paginator.num_pages }}.
+                      </span>
+              
+                      {% if trend_serie.has_next %}
+                          <a href="?page={{ trend_serie.next_page_number }}">next</a>
+                          <a href="?page={{ trend_serie.paginator.num_pages }}">last &raquo;</a>
+                      {% endif %}
+                  </span>
+                </div>
+      {% endif %} 
+  {% else %} 
+  {% endif %}
+{% endblock %}
+        </div>
+    {% if section == 'search' %} 
+      <section class="upcoming">
+      <center>
+        <h2 class="h2 section-title">Collection For Your '{{ searched }}'</h2>
+      </center>
+        <br>
+        <div class="container">
+          <ul class="movies-list">
+      {% for ani in search_list %}
+            <li>
+              <div class="movie-card">
+        
+                <a href="{% url 'websiteapp:collection' ani.id %}">
+                  <figure class="card-banner">
+                    <img src="{{ani.backdrop_path}}" alt="Sonic the Hedgehog 2 movie poster">
+                  </figure>
+                </a>
+
+                <div class="title-wrapper">
+                  <a href="{% url 'websiteapp:collection' ani.id %}">
+                    <h3 class="card-title">{{ani.title}}</h3>
+                  </a>
+
+                  <time datetime="2022">{{ani.release}}</time>
+                </div>
+
+                <div class="card-meta">
+                  <div class="badge badge-outline">2K</div>
+
+                  <div class="duration">
+                    <ion-icon name="time-outline"></ion-icon>
+
+                    <time datetime="PT122M">{{ani.duration}}</time>
+                  </div>
+
+                  <div class="rating">
+                    <ion-icon name="star"></ion-icon>
+
+                    <data>{{ani.rating}}</data>
+                  </div>
+                </div>
+
+              </div>
+            </li>
+
+      {% endfor %} 
+    {% endif %}     
+      </section>
+
+    
+    <!--<h2 class="cta-title" style="color: white;">{{movies}}</h2>
+    <h2 class="cta-title" style="color: white;">Has Previous Page:{{movies.has_previous}}</h2>
+    <h2 class="cta-title" style="color: white;">Has Next Page:{{movies.has_next}}</h2>
+    <h2 class="cta-title" style="color: white;">Current Page:{{movies.number}}</h2>
+    <h2 class="cta-title" style="color: white;">Total Pages:{{movies.paginator.num_pages}}</h2>
+    {% if movies.has_previous %}
+      <a href="?page=1">&laquo; First</a>
+      <a href="?page={{ movies.previous_page_number }}">Previous</a>
+    {% endif %} <br>
+    <h2 class="cta-title" style="color: white;">Page {{movies.number}} of {{movies.paginator.num_pages}} </h2><br>
+    {% if movies.has_next %}
+      <a href="?page={{ movies.next_page_number }}">Next</a>
+      <a href="?page={{ movies.paginator.num_pages }}">Last &raquo;</a>
+    {% endif %} <br>
+{% block footer %}-->
+
+      <!-- 
+        - #CTA
+      -->
+
+      <section class="cta">
+        <style>
+          .cta {
+  background: url("{%static 'ass/assets/images/cta-bg.jpg' %}") no-repeat;
+  background-size: cover;
+  background-position: center;
+  text-align: center;
+  padding-block: 50px;
+}
+
+        </style>
+        <div class="container" style="box-sizing: border-box;">
+
+          <div class="title-wrapper">
+            <h2 class="cta-title">Trial start first 30 days.</h2>
+
+            <p class="cta-text">
+              Enter your email to create or restart your membership.
+            </p>
+          </div>
+
+          <form action="" class="cta-form">
+            <input type="email" name="email" required placeholder="Enter your email" class="email-field">
+
+            <button type="submit" class="cta-form-btn">Get started</button>
+          </form>
+
+        </div>
+      </section>
+
+    </article>
+  </main>
+
+
+
+
+
+  <!-- 
+    - #FOOTER
+  -->
+
+  <footer class="footer">
+
+    <div class="footer-top">
+      <style>
+        .footer-top {
+  background: url("{%static 'ass/assets/images/footer-bg.jpg' %}") no-repeat;
+  background-size: cover;
+  background-position: center;
+  padding-block: 80px 50px;
+}
+
+      </style>
+      <div class="container">
+
+        <div class="footer-brand-wrapper">
+
+          <a href="/" class="logo">
+            <div class="coontainer">
+            <img src="{% static 'cinelogo.png'%}" alt="Cinegracia" width="75" height="75" >
+            <p class="hero-subtitle-for">Cinegracia</p>
+            </div>
+          </a>
+          <ul class="footer-list">
+
+            <li>
+              <a href="/" class="footer-link">Home</a>
+            </li>
+
+            <li>
+              <a href="#" class="footer-link">Movie</a>
+            </li>
+
+            <li>
+              <a href="#" class="footer-link">TV Show</a>
+            </li>
+
+            <li>
+              <a href="#" class="footer-link">Web Series</a>
+            </li>
+
+            <li>
+              <a href="#" class="footer-link">Pricing</a>
+            </li>
+
+          </ul>
+
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="quicklink-wrapper">
+
+          <ul class="quicklink-list">
+
+            <li>
+              <a href="#" class="quicklink-link">Faq</a>
+            </li>
+
+            <li>
+              <a href="#" class="quicklink-link">Help center</a>
+            </li>
+
+            <li>
+              <a href="#" class="quicklink-link">Terms of use</a>
+            </li>
+
+            <li>
+              <a href="#" class="quicklink-link">Privacy</a>
+            </li>
+
+          </ul>
+
+          <ul class="social-list">
+
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-facebook"></ion-icon>
+              </a>
+            </li>
+
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-twitter"></ion-icon>
+              </a>
+            </li>
+
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-pinterest"></ion-icon>
+              </a>
+            </li>
+
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-linkedin"></ion-icon>
+              </a>
+            </li>
+
+          </ul>
+
+        </div>
+
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container">
+
+        <p class="copyright">
+          &copy; 2022 <a href="#">sudharcruz</a>. All Rights Reserved
+        </p>
+
+        <img src="{% static 'ass/assets/images/footer-bottom-img.png' %}" alt="Online banking companies logo" class="footer-bottom-img">
+
+      </div>
+    </div>
+
+  </footer>
+
+
+  <style>
+    .movie-card :is(.duration, .rating) {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--gainsboro);
+  font-size: var(--fs-11);
+  font-weight: var(--fw-500);
+  }
+  
+  .movie-card :is(.duration, .rating) ion-icon {
+  font-size: 30px; /* Adjust the font-size value to your preference */
+  --ionicon-stroke-width: 2px; /* Adjust the stroke width value to your preference */
+  color: var(--citrine);
+  }
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination a {
+    color: var(--citrine);
+    padding: 8px 16px;
+    text-decoration: none;
+    border: 1px solid var(--citrine);
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.pagination a:hover {
+    background-color: var(--citrine);
+    color: #fff;
+}
+
+.pagination .current {
+    padding: 8px 16px;
+    font-weight: bold;
+    color: var(--citrine);
+    border: 1px solid var(--citrine);
+    border-radius: 5px;
+    background-color:black;
+}
+
+.pagination .step-links {
+    display: flex;
+}
+
+.pagination .step-links a {
+    margin: 0 5px;
+}
+
+@media(min-width:1200px){
+          .center{
+            margin-left: 550px;
+          }
+        }
+  </style>
+
+
+  <!-- 
+    - #GO TO TOP
+  -->
+
+  <a href="#top" class="go-top" data-go-top>
+    <ion-icon name="chevron-up"></ion-icon>
+  </a>
+
+
+
+
+
+  <!-- 
+    - custom js link
+  -->
+  <script src="{% static 'ass/assets/js/script.js' %}"></script>
+
+  <!-- 
+    - ionicon link
+  -->
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+{% endblock %}
+</body>
+
+</html>

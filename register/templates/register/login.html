@@ -1,0 +1,62 @@
+{%load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+{% block head %}
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Login Form</title>
+
+    <!-- Font Icon -->
+    <link rel="stylesheet" href="{%static 'fonts/material-icon/css/material-design-iconic-font.min.css' %}">
+
+    <!-- Main css -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock %}
+</head>
+<body>
+    
+{% block content %}
+    <div class="main">
+
+        <div class="container">
+            <div class="signup-content">
+              <form action="" method="post" id="signup-form" class="signup-form" autocomplete="off">
+                    <h2>Login</h2>
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input type="text" class="form-input" name="name" id="name" placeholder="User Name" required/>
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="password" class="form-input" name="password" id="password" placeholder="Password" required/>
+                        <span toggle="#password" class="zmdi zmdi-eye field-icon toggle-password"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" name="agree-term" id="agree-term" class="agree-term" />
+                        <label for="agree-term" class="label-agree-term"><span><span></span></span>I agree all statements in  <a href="#" class="term-service">Terms of service</a></label>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" name="submit" id="submit" class="form-submit submit" value="Login" required />
+                        <a href="#" class="submit-link submit">Register</a>
+                    </div>
+                    <a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" href="{% url 'password_reset' %}">
+                        Forgot Password? Click Here
+                    </a>
+              </form>
+                
+            </div>
+        </div>
+        {% include 'websiteapp/messages.html' %}
+    </div>
+{% endblock %}
+    <!-- JS -->
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{%static 'js/main.js' %}"></script>
+    
+</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+
+</html>

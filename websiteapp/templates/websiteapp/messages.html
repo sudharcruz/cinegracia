@@ -1,0 +1,82 @@
+<div class="cosntainer">
+  {% if messages %}
+      {% for message in messages %}
+          <div class="message-popup {{ message.tags }}">
+              <span class="close-button">&times;</span>
+              <p>{{ message }}</p>
+          </div>
+      {% endfor %}
+  {% endif %}
+</div>
+<style>
+.message-popup {
+background-color: #ff3ecf;
+color: #000000;
+position: fixed;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+z-index: 9999;
+padding: 10px;
+border-radius: 4px;
+font-weight: bold;
+cursor: pointer;
+opacity: 0;
+transition: opacity 0.3s ease-in-out;
+box-shadow: 0 2px 4px rgb(0, 0, 0)
+
+}
+
+
+.message-popup.show {
+opacity: 1;
+}
+
+.message-popup.success {
+background-color: #26ff00;
+color: #000000;
+}
+
+.message-popup.error {
+background-color: #ff1900;
+color: #000000;
+font-weight: bolder;
+}
+
+.message-popup.warning {
+background-color: #ff7300;
+color: #000;
+}
+
+.close-button {
+position: absolute;
+top: 0px;
+right: -1px;
+font-weight: bold;
+color: #000000;
+cursor: pointer;
+transition: color 0.3s ease-in-out;
+}
+
+.close-button:hover {
+color: #ebebe7;
+}
+
+</style>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const messagePopup = document.querySelector('.message-popup');
+      const closeButton = document.querySelector('.close-button');
+  
+      if (messagePopup && closeButton) {
+        messagePopup.classList.add('show');
+  
+        closeButton.addEventListener('click', function() {
+          messagePopup.classList.remove('show');
+        });
+      }
+    });
+</script>
+  

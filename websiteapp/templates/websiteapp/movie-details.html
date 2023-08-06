@@ -1,0 +1,1648 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% if det %}
+      <title>{{det.title}}-{{det.release}}</title>
+  {% elif fut %}
+      <title>{{fut.title}}-{{fut.release}}</title>
+  {% elif selected %}
+      <title>{{selected.title}}-{{selected.release_date}}</title>
+  {% elif serious %}
+      <title>{{serious.name}}-{{serious.first_air_date}}</title>
+  {% elif sea %}
+    {% if 'title' in sea %}
+      <title>{{sea.title}}-{{sea.release_date}}</title>
+    {% elif 'name' in sea %}
+    <title>{{sea.name}}-{{sea.first_air_date}}</title>
+    {% endif %}
+  {% endif %}
+
+  <!-- 
+    - favicon
+  -->
+  <link rel="shortcut icon" href="{%static 'cinelogo.png' %}" type="image/svg+xml">
+
+  <!-- 
+    - custom css link
+  -->
+  <link rel="stylesheet" href="{%static 'ass/css/style.css' %}">
+  
+  <link rel="stylesheet" href="{%static 'ass/css/button.css' %}">
+
+  <link rel="stylesheet" href="{%static 'fontawesome/css/all.css' %}">
+  
+
+  <!-- 
+    - google font link
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body id="#top">
+
+  <!-- 
+    - #HEADER
+  -->
+
+  <header class="header" data-header>
+    <div class="container">
+
+      <div class="overlay" data-overlay></div>
+
+      <a href="/" class="logo">
+        <div class="coontainer">
+        <img src="{% static 'cinelogo.png'%}" alt="Cinegracia" width="75" height="75" >
+        <p class="hero-subtitle-for">Cinegracia</p>
+        </div>
+        <style>
+          .coontainer{
+            display: flex;
+            align-items: center;
+            margin-right: 10px;
+          }
+          .hero-subtitle-for {
+              margin-right: 20px;
+              color: var(--citrine);
+              font-size: var(--fs-4);
+              font-weight: var(--fw-700);
+              margin-bottom: 0px;
+              margin-left: 5px;
+            }
+
+        </style>
+      </a>
+      <div class="header-actions">
+
+        <button class="search-btn">
+          <ion-icon name="search-outline"></ion-icon>
+        </button>
+
+        <div class="lang-wrapper">
+          <label for="language">
+            <ion-icon name="globe-outline"></ion-icon>
+          </label>
+        </div>
+      {% if user.is_authenticated %}
+        <li><a class="btn btn-primary" href="{% url  'register:logout'   %}">Logout</a></li>
+      {% else %}
+      <li><a class="btn btn-primary" href="{% url 'register:register' %}">Sign-Up</a></li>
+      {% endif %}
+      </div>
+
+      <button class="menu-open-btn" data-menu-open-btn>
+        <ion-icon name="reorder-two"></ion-icon>
+      </button>
+
+      <nav class="navbar" data-navbar>
+
+        <div class="navbar-top">
+
+          <a href="/" class="logo">
+            <div class="coontainer">
+            <img src="{% static 'cinelogo.png'%}" alt="Cinegracia" width="75" height="75" >
+            <p class="hero-subtitle-for">Cinegracia</p>
+            </div>
+          </a>
+
+          <button class="menu-close-btn" data-menu-close-btn>
+            <ion-icon name="close-outline"></ion-icon>
+          </button>
+          
+        </div>
+        <ul class="navbar-list">
+          
+          <li>
+            
+            <a class="navbar-link" href="/" >Home</a>
+          </li>
+          <style>
+            @media (min-width:768px){
+              .navbar-list{
+                display: none;
+              }
+              .navbar{
+                display: none;
+              }
+              .header.active {
+                background: transparent ;
+                padding-block: 23px;
+              }
+
+            }
+            @media (max-width:768px){
+              .header.active{
+                background: transparent;
+                padding-block: 10px;
+              }
+            }
+          </style>
+        </ul>
+
+
+        
+
+        <ul class="navbar-social-list">
+
+          <li>
+            <a href="#" class="navbar-social-link">
+              <ion-icon name="logo-twitter"></ion-icon>
+            </a>
+          </li>
+
+          <li>
+            <a href="#" class="navbar-social-link">
+              <ion-icon name="logo-facebook"></ion-icon>
+            </a>
+          </li>
+
+          <li>
+            <a href="#" class="navbar-social-link">
+              <ion-icon name="logo-pinterest"></ion-icon>
+            </a>
+          </li>
+
+          <li>
+            <a href="#" class="navbar-social-link">
+              <ion-icon name="logo-instagram"></ion-icon>
+            </a>
+          </li>
+
+          <li>
+            <a href="#" class="navbar-social-link">
+              <ion-icon name="logo-youtube"></ion-icon>
+            </a>
+          </li>
+
+        </ul>
+
+      </nav>
+
+    </div>
+  </header>
+
+
+
+
+
+  <main>
+    <article>
+
+      <!-- 
+        - #MOVIE DETAIL
+      -->
+    
+    {%  if det %}
+      <section class="movie-detail">
+                <style>
+                  .movie-detail {
+          background: url("{{det.bgimage.url}}" ) no-repeat;
+          background-size: cover;
+          background-position: center;
+          padding-top: 50px;
+          padding-bottom: 50px;
+        }
+        </style>
+        
+
+    
+                
+
+    
+        <div class="container">
+
+          <figure class="movie-detail-banner">
+
+            <img src="{{det.movieimage.url}}" alt="Free guy movie poster">
+
+            <button class="play-btn">
+              
+              <ion-icon name="play-circle-outline" ></ion-icon>
+            </button>
+
+          </figure>
+
+          <div class="movie-detail-content">
+
+            <p class="detail-subtitle">{{det.newrel}}</p>
+
+            <h1 class="h1 detail-title">
+               {{det.title}}
+            </h1>
+
+            <div class="meta-wrapper">
+
+              <div class="badge-wrapper">
+                <div class="badge badge-fill">PG 13</div>
+
+                <div class="badge badge-outline">{{det.res}}</div>
+              </div>
+
+              <div class="ganre-wrapper">
+                <a href="#">{{det.genre}}</a>
+
+                
+              </div>
+
+              <div class="date-time">
+
+                <div>
+                  <ion-icon name="calendar-outline"></ion-icon>
+
+                  <time datetime="2021">{{det.release}}</time>
+                </div>
+
+                <div>
+                  <ion-icon name="time-outline"></ion-icon>
+
+                  <time datetime="PT115M">{{det.duration}}</time>
+                </div>
+              
+
+              </div>
+              <div class="card-meta-1">
+                  <div class="badge badge-outline">
+                    <strong>{{det.seasons}}</strong> | <strong>{{det.episodes}}</strong>
+                    
+                  </div>
+              </div>
+            </div>
+
+            <p class="storyline">
+            <strong>{{det.plot}}</strong>
+            <style>
+              .storyline{
+                color: #ffffff;
+                mix-blend-mode: difference;
+              }
+            </style>
+            </p>
+
+            <div class="details-actions">
+
+              <button class="share">
+                <ion-icon name="share-social"></ion-icon>
+
+                <span>Share</span>
+              </button>
+
+              <div class="title-wrapper">
+                <p class="title">{{det.ott}}</p>
+
+                <p class="text">Streaming Channels</p>
+              </div>
+
+              <button class="btn btn-primary">
+                <ion-icon name="play"></ion-icon>
+
+                <span href="">Watch Now</span>
+              </button>
+
+            </div>
+
+            <a href="{%static 'ass/assets/images/movie-4.jpg' %}" download class="download-btn">
+              <span>Download</span>
+
+              <ion-icon name="download-outline"></ion-icon>
+            </a>
+            <br>
+      </section>
+
+      <section class="top-rated">
+        <style>
+          .top-rated {
+            background: url("{%static 'ass/assets/images/top-rated-bg.jpg' %}") no-repeat;
+            background-size: cover;
+            background-position: center;
+            padding-block: var(--section-padding);
+          }
+        </style>
+        <div class="container">
+
+          <center><h2 class="hero-subtitle-for"><strong>Add Like:</strong></h2></center>
+        <center>
+          {% if is_like %} 
+            <a href="{% url 'websiteapp:addlike' movieid=det.title id=det.id %}">
+              <span class="fa-stack fa-2x">
+                
+                <i class="fas fa-heart fa-stack-6x fa-inverse" style="color: rgb(255, 0, 89);"></i>
+              </span>
+              
+            </a>
+          {% else %}
+            <a href="{% url 'websiteapp:addlike' movieid=det.title id=det.id %}">
+              <span class="fa-stack fa-2x">
+                
+                <i class="far fa-heart fa-stack-6x fa-inverse" style="color: rgb(255, 0, 89); size: 200px;"></i>
+              </span>
+              
+            </a>
+          {% endif %}
+          {% if totallike == 1 or 0 %}
+            <h3 class="text2023">{{totallike}} Like</h3>
+          {% else %}
+            <p class="text2023">{{totallike}} Likes</p>
+          {% endif %}
+          <br>
+        </center>
+        </div>
+      </section>
+      <br>
+      <div class="container">
+        <div id="favourite-section" style="display: flex;">
+          <div style="flex: 1; display: flex;box-sizing: border-box;flex-wrap: wrap;flex-direction: column;">
+            <h2 class="text2023"><span>Add To Favourites:</span></h2>
+            {% if is_favourite %} 
+            <a href="{% url 'websiteapp:addfavourite' movieid=det.title id=det.id %}">
+              <span class="fa-stack fa-2x">
+                <i class="fas fa-star fa-stack-6x fa-inverse" style="color: gold;"></i>
+              </span>
+            </a>
+            {% else %}
+            <a href="{% url 'websiteapp:addfavourite' movieid=det.title id=det.id %}">
+              <span class="fa-stack fa-2x">
+                <i class="far fa-star fa-stack-6x fa-inverse" style="color: gold; size: 200px;"></i>
+              </span>
+            </a>
+            {% endif %}
+            <br>
+            <div class="rating-section">
+              <div class="rate-label">
+                <label class="section-subtitle"><strong>Average User Rating:</strong></label>
+              </div>
+              <div class="rate-value">
+                <h3 class="text2023">{{ averagerate }}</h3>
+              </div>
+            </div>
+            {% for rate in myrate %}
+              {% if request.user == rate.user %}
+              
+                <div class="rating-section">
+                  <div class="rate-label">
+                    <label class="section-subtitle"><strong>Your Rating:</strong></label>
+                  </div>
+                  <div class="rate-value">
+                    <h3 class="text2023">{{ rate.rating }}</h3>
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+          <div style="flex: 1;display: flex;flex-direction: column;flex-wrap: wrap;">
+            
+            <form method="post" action="{% url 'websiteapp:movie-details' movieid=det.title  id=det.id %}">
+              {% csrf_token %}
+              <label class="service-subtitle">Rate the movie:</label><br><br>
+              <input type="number" style="size: 200px;" class="center-placeholder" placeholder="Rate Here" name="rating" min="1" max="10" step="0.1" required><br>
+              <button type="submit" class="btn btn-primary">Submit Rating</button><br>
+              {% for rating in postrating %}
+                {% if request.user == rating.user %}
+                  <a class="button button-primary" href="{% url 'websiteapp:rating-delete' deleteid=rating.id %}" >Delete My Rating</a>
+                {% endif %}
+              {% endfor %}
+              <br>
+              
+                {% include 'websiteapp/messages.html' %}
+              
+            </form>
+          </div>
+        </div>
+                    <style>
+              
+
+              @media (max-width: 600px) {
+                .fa-stack {
+                  font-size: 1.5rem;
+                }
+                .container {
+                display: flex;
+                flex-direction: column; 
+                align-items: center; 
+              }
+
+              #favourite-section {
+                display: flex;
+                flex-direction: column;
+                align-items: center; 
+              }
+
+              
+              .section {
+                width: 100%; 
+                padding: 10px;
+              }
+
+              
+              .fa-stack {
+                font-size: 2rem;
+              }
+
+              }
+
+
+                      .rating-section {
+                        display: flex;
+                        align-items: center;
+                        margin-top: 20px;
+                      }
+                    
+                      .rate-label {
+                        margin-right: 15px;
+                      }
+                    
+                      .rate-value {
+                        font-size: 20px;
+                      }
+                    </style>
+      </div>
+      
+      <br>
+      <br>
+      <hr>
+
+      <section class="service">
+        <div class="container">
+
+          <div class="service-banner">
+            
+              <p class="service-subtitle">Comment Section</p>
+              <br>
+
+                <h2 class="h2 service-title">Here You Can Comment To The Film &#x1F60A; ❤️;</h2>
+              
+           
+          </div>
+
+          <div class="service-content">
+            <br>
+            
+            <form action="" method="post">
+              {% csrf_token %}
+                {% if user.is_authenticated %}
+                  <center>
+                    {{ form.as_p }}
+                  </center>
+                    <br/>
+                  
+                    
+
+                    <small><input type="submit" value="post" class="btn btn-primary"></small>
+                {% else %}
+                <div class="comment-container">
+                  <form class="comment-form">
+                    <textarea placeholder="Comment Here" style="height: 50px; width: fit-content; resize: none; font-size: 25px; background-color: rgb(255, 255, 255);"></textarea>
+                  </form>
+                  
+                </div>
+                
+                  <br>
+                  
+  
+                  <input type="submit" value="post" class="btn btn-primary">
+                  <br>
+                  <br>
+                  <center>
+                    <h3>
+                    {% if messages %}
+                      {% for message in messages %}
+                        <a class="text2023" href="{% url 'register:register' %}"> {{message}} </a>
+                      {% endfor %}
+                    {% endif %}
+                    
+                    </h3>
+                  </center>
+                {% endif %}
+            </form>
+            <br>
+            <br>
+            <style>
+              .text2023{
+                color: #ffffff;
+                mix-blend-mode: difference;
+              }
+            </style>
+            <br>
+            <br>
+          </div>
+
+          </div>
+
+
+        </div>
+        
+      </section>
+      <h2 class="h2 section-title">Comments:</h2>
+      <br>
+      <div>
+          {% if not det.comments.all %} 
+          <a class="section-subtitle"><h2>No Comments Yet</h2><a class="section-subtitle" href="#">Add now</a></a>
+          {% else %}
+              {% for comment in det.comments.all %} 
+                <a class="section-subtitle"><strong>{{ comment.user.username }}-{{ comment.date_added }}</strong></a><br/>
+                <a class="service-subtitle">{{ comment.usercomments }} </a>
+                
+                  <!--<p>Replies</p>
+                    {% for reply in comment.replies.all %}
+                    <div class="reply">
+                        <a class="section-subtitle"><strong>{{ reply.user.username }} - {{ reply.date_added }}</strong></a><br/>
+                        <a class="service-subtitle">{{ reply.usercomments }}</a>
+                    </div>
+                    {% endfor %}-->
+                    <div class="filter-list">
+                      {% if user.is_authenticated %}
+                      <small><a class="button button-primary" href="{% url 'websiteapp:comment-delete' delid=comment.id id=comment.id %}">Delete</a></small>
+                          <!--<li>
+                              
+                              <a class="button button-primary" href="">Reply</a>
+                          </li>-->
+                      {% endif %}
+                    </div>
+                  <br><br>
+                </ul>
+              {% endfor %}
+          {% endif %}
+      </div>
+
+
+      <br/>
+      <br/>
+      <hr>
+    {% endif %} 
+    
+        {% if sea.title %}
+                <section class="movie-detail">
+                    <div class="container">
+
+                    <figure class="movie-detail-banner">
+
+                      <img src="https://image.tmdb.org/t/p/w500{{sea.poster_path}}" alt="Free guy movie poster">
+
+                      <button class="play-btn" name="play">
+                        
+                        <ion-icon name="play-circle-outline" ></ion-icon>
+                      </button>
+                      
+                    </figure>
+
+                    <div class="movie-detail-content">
+
+                      <p class="detail-subtitle">{{sea.tagline}}</p>
+              
+                        <h1 class="new-title" style="word-wrap: break-word;">
+                          {{sea.title}}
+                        </h1>
+                      
+                        
+                      <style>
+                        .new-title{
+                          color: white;
+                          mix-blend-mode: difference;
+                          font-size: 50px;
+                        }
+                      </style>
+
+                      <div class="meta-wrapper">
+
+                        <div class="badge-wrapper">
+                          <div class="badge badge-fill">PG 13</div>
+
+                          <div class="badge badge-outline">{{sea.original_language}}</div>
+                        </div>
+
+                        <div class="ganre-wrapper">
+                          
+                          
+                          <a >Genres: {% for genre in genres %}
+                            {{ genre }}
+                            {% if not forloop.last %},
+                            {% endif %}{% endfor %}
+                            </a>
+                      
+
+
+                          
+                        </div>
+
+                        <div class="date-time">
+
+                          <div>
+                            <ion-icon name="calendar-outline"></ion-icon>
+                          
+                            <time datetime="2021">{{sea.release_date}}</time>
+                          
+                          </div>
+
+                          <div>
+                            <ion-icon name="time-outline"></ion-icon>
+
+                            <time datetime="PT115M">{{sea.runtime}}mins</time>
+                          </div>
+                        
+
+                        </div>
+                        <div class="card-meta-1">
+                            <div class="badge badge-outline">
+                              <strong>Budget</strong> | <strong>{{sea.budget}}</strong>
+                              
+                            </div>
+                        </div>
+                        <div class="container">
+                          <h3 class="section-subtitle" style="margin-right: 75px;margin-top: 10px;"><strong>Popularity:{{sea.popularity}}</strong></h3>
+                          <span class="section-subtitle" style="margin-right: 50px;margin-top: 10px;"><strong>Original Title:{{sea.original_title}}</strong></span>
+                          <h3 class="section-subtitle" style="margin-right: 75px;margin-top: 10px;"><strong>Revenue:{{sea.revenue}}</strong></h3>
+                        </div>
+                      </div>
+
+                      <p class="storyline">
+                      <strong>{{sea.overview}}</strong>
+                      <style>
+                        .storyline{
+                          color: #ffffff;
+                          mix-blend-mode: difference;
+                          font-size: large;
+                        }
+                      </style>
+                      </p>
+                      <br>
+                      <div class="details-actions">
+
+                        <button class="share">
+                          <ion-icon name="share-social"></ion-icon>
+
+                          <span>Share</span>
+                        </button>
+
+                        <div class="title-wrapper">
+                          <p class="title">Status : {{sea.status}}</p>
+
+                          <p class="text">Streaming Channels</p>
+                        </div>
+
+                        <button class="btn btn-primary" onclick="openTrailer('{{ sea.homepage }}')">
+                          <ion-icon name="play"></ion-icon>
+
+                          <li href="{{ sea.trailer_url }}">Watch Now</li>
+                        </button>
+                        
+                      <iframe width="560" height="315" src="{{ sea.trailer_url }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        
+
+
+
+                      </div>
+
+                      <a download class="download-btn">
+                        <span>Download</span>
+
+                        <ion-icon name="download-outline"></ion-icon>
+                      </a>
+                      
+                      <br>
+                </section>
+                <section class="top-rated">
+                  <style>
+                    .top-rated {
+                      background: url("{%static 'ass/assets/images/top-rated-bg.jpg' %}") no-repeat;
+                      background-size: cover;
+                      background-position: center;
+                      padding-block: var(--section-padding);
+                    }
+                  </style>
+                  <div class="coantainer" style="display: flex;">
+                    
+                    <div style="flex: 1;">
+                      <div class="like">
+                        <h2 class="hero-subtitle-for"><strong>Add Like:</strong></h2>
+                        
+                        {% if user_like %} 
+                              <a href="{% url 'websiteapp:addlike' movieid=sea.title id=sea.id %}">
+                                <span class="fa-stack fa-2x">
+                                  <i class="fas fa-heart fa-stack-6x fa-inverse" style="color: rgb(255, 0, 89);"></i>
+                                  
+                                </span>
+                                
+                              </a>
+                        {% else %}
+                              <a href="{% url 'websiteapp:addlike' movieid=sea.title id=sea.id %}">
+                                <span class="fa-stack fa-2x">
+                                  <i class="far fa-heart fa-stack-6x fa-inverse" style="color: rgb(255, 0, 89); size: 200px;"></i>
+                                </span>
+                                
+                              </a>
+                          
+                        {% endif %}
+                        {% if totallike == 1 %}
+                          <h3 class="text2023" style="color: white;">{{totallike}} Like</h3>
+                        {% else %}
+                          <p class="text2023" style="color: white;">{{totallike}} Likes</p>
+                        {% endif %}
+                      
+                        {% for rate in post_rate %}
+                          {% if request.user == rate.user %}
+                          
+                            <div class="rating-section">
+                              <div class="rate-label">
+                                <label class="section-subtitle"><strong>Your Rating:</strong></label>
+                              </div>
+                              <div class="rate-value">
+                                <h3 class="text2023">{{ rate.rating }}</h3>
+                              </div>
+                            </div>
+                          {% endif %}
+                        {% endfor %}
+                      </div>
+                      <style>
+                        @media (min-width:768px){
+                          .like{
+                            margin-left: 50px;
+                        }
+                        }
+                      </style>  
+                      
+                      <br>
+                    </div>
+                    <div style="flex: 1;">
+                      <h2 class="hero-subtitle-for"><span>Add To Favourites:</span></h2>
+                      {% if user_fav %} 
+                      <a href="{% url 'websiteapp:add-to-favourite' movieid=sea.title id=sea.id %}">
+                        <span class="fa-stack fa-2x">
+                          <i class="fas fa-star fa-stack-6x fa-inverse" style="color: gold;"></i>
+                        </span>
+                        
+                      </a>
+                      {% else %}
+                      <a href="{% url 'websiteapp:add-to-favourite' movieid=sea.title id=sea.id %}">
+                        <span class="fa-stack fa-2x">
+                          <i class="far fa-star fa-stack-6x fa-inverse" style="color: gold; size: 200px;"></i>
+                        </span>
+                      </a>
+                      {% endif %}
+                      <br>
+                      <div class="rating-section">
+                        <div class="rate-label">
+                          <label class="section-subtitle"><strong>Average User Rating:</strong></label>
+                        </div>
+                        <div class="rate-value">
+                          <h3 class="text2023">{{ averagerate }}</h3>
+                        </div>
+                      </div>
+                    </div>
+                    <div style="flex: 1;">
+            
+                      <form method="post" action="{% url 'websiteapp:add-rating' movieid=sea.title  id=sea.id %}">
+                        {% csrf_token %}
+                        <label class="service-subtitle">Rate the movie:</label><br><br>
+                        <input type="number" class="center-placeholder" style="width: 250px;" placeholder="Rate Here" name="rating" min="1" max="10" step="0.1" required><br>
+                        <button type="submit" class="btn btn-primary">Submit Rating</button><br>
+                        {% for rate in post_rate %}
+                          {% if request.user == rate.user %}
+                            <a class="button button-primary" href="{% url 'websiteapp:delete-rating' movieid=sea.title id=sea.id did=rate.id %}" >Delete My Rating</a>
+                          {% endif %}
+                        {% endfor %}
+                        <br>
+                        
+                      </form>
+                    </div>
+                  </div>
+                    {% include 'websiteapp/messages.html' %}
+                </section>
+                <section class="service">
+                  <div class="container">
+          
+                    <div class="service-banner">
+                      
+                        <p class="service-subtitle">Comment Section</p>
+                        <br>
+          
+                          <h2 class="h2 service-title">Here You Can Comment To The Film &#x1F60A; ❤️</h2>
+                        
+                     
+                    </div>
+          
+                    <div class="service-content">
+                      <br>
+                      
+                      <form action="{% url 'websiteapp:add-comment' sea.title sea.id %}" method="post">
+                        {% csrf_token %}
+                          
+                            
+                            <div class="connect">
+                              <input type="text" name="text" class="center-placeholder" placeholder="Comment Here">
+                            
+                              <br/>
+                            
+                              
+          
+                              <small><input type="submit" value="post" class="btn btn-primary" style="width: 300px;"></small>
+                            </div>
+                            
+                          
+                      </form>
+                      <br>
+                      <br>
+                      <style>
+                        .text2023{
+                          color: #ffffff;
+                          mix-blend-mode: difference;
+                        }
+                      </style>
+                      <br>
+                      <br>
+                    </div>
+          
+                    </div>
+          
+          
+                  </div>
+                  
+                </section>
+                <h2 class="h2 section-title">Comments:</h2>
+                    <br>
+                    <div>
+                        {% if not allcomments %} 
+                        <a class="section-subtitle"><h2>No Comments Yet</h2><a class="section-subtitle" href="#">Add now</a></a>
+                        {% else %}
+                            {% for comment in allcomments %} 
+                              <a class="section-subtitle"><strong>{{ comment.user }}-{{comment.date_added}}</strong></a><br/>
+                              <div class="container" style="display: flex;">
+                                <a class="service-subtitle" style="flex:1;padding-bottom: 20px;">{{ comment.text }} </a>
+                              
+                                <!--<p>Replies</p>
+                                  {% for reply in comment.replies.all %}
+                                  <div class="reply">
+                                      <a class="section-subtitle"><strong>{{ reply.user.username }} - {{ reply.date_added }}</strong></a><br/>
+                                      <a class="service-subtitle">{{ reply.usercomments }}</a>
+                                  </div>
+                                  {% endfor %}-->
+                                  <div class="filter-list" style="flex:0.1;padding-bottom: 40px;">
+                                    {% if user.is_authenticated %}
+                                    <small><a class="button button-primary" href="{% url 'websiteapp:delete-comment' sea.title sea.id comment.id %}">Delete</a></small>
+                                        
+                                    {% endif %}
+                                  </div>
+                                <br><br>
+                              </div>
+                              </ul>
+                            {% endfor %}
+                        {% endif %}
+                <br>
+                
+        {% elif sea.name %}
+        <section class="movie-detail">
+  
+  
+            <div class="container">
+  
+            <figure class="movie-detail-banner">
+  
+              <img src="https://image.tmdb.org/t/p/w500{{sea.poster_path}}" alt="Free guy movie poster">
+  
+              <button class="play-btn" name="play">
+                
+                <ion-icon name="play-circle-outline" ></ion-icon>
+              </button>
+              
+            </figure>
+  
+            <div class="movie-detail-content">
+  
+              <p class="detail-subtitle">{{sea.tagline}}</p>
+                <h1 class="new-title">
+                  {{sea.name}}
+                </h1>
+              
+                
+              <style>
+                .new-title{
+                  color: white;
+                  mix-blend-mode: difference;
+                  font-size: 50px;
+                }
+              </style>
+  
+              <div class="meta-wrapper">
+  
+                <div class="badge-wrapper">
+                  <div class="badge badge-fill">PG 13</div>
+  
+                  <div class="badge badge-outline">{{sea.original_language}}</div>
+                </div>
+  
+                <div class="ganre-wrapper">
+                  
+                  
+                  <a>Genres: {% for genre in genres %}
+                    {{ genre }}
+                    {% if not forloop.last %},
+                    {% endif %}{% endfor %}</a>
+               
+  
+  
+                  
+                </div>
+  
+                <div class="date-time">
+  
+                  <div>
+                    <ion-icon name="calendar-outline"></ion-icon>
+                    <time datetime="2021">{{sea.first_air_date}}  <strong>To</strong> {{sea.last_air_date}}</time>
+                  </div>
+  
+                  <div>
+                    <ion-icon name="time-outline"></ion-icon>
+  
+                    <time datetime="PT115M">{% for runtime in sea.episode_run_time %}
+                      {{runtime}}mins - Each 
+                      {% endfor %} </time>
+                  </div>
+                
+                  
+                </div>
+                <div class="card-meta-1">
+                    <div class="badge badge-outline">
+                      <strong>No.Of.Seasons:{{sea.number_of_seasons}}</strong>  |  <strong>No.Of.Episodes:{{sea.number_of_episodes}} </strong>
+                      
+                    </div>
+                </div>
+                <div class="coontainer">
+                  <div class="extra">
+                    <h3 class="section-subtitle"><strong>Popularity:{{sea.popularity}}</strong></h3>
+                    <h3 class="section-subtitle"><strong>Original Title:{{sea.original_name}}</strong></h3>
+                    <h3 class="section-subtitle"><strong> Origin Country:{% for origin in sea.origin_country %} {{origin}} {% endfor %}</strong></h3>
+                  </div>
+                </div>
+                
+              </div>
+  
+              <p class="storyline">
+              <strong>{{sea.overview}}</strong>
+              <style>
+                .storyline{
+                  color: #ffffff;
+                  mix-blend-mode: difference;
+                  font-size: large;
+                }
+              </style>
+              </p>
+              <br>
+              <div class="details-actions">
+  
+                <button class="share">
+                  <ion-icon name="share-social"></ion-icon>
+  
+                  <span>Share</span>
+                </button>
+  
+                <div class="title-wrapper">
+                  <p class="title">
+                    Status:{{sea.status}}
+                  </p>
+  
+                  <p class="text">Streaming Channels</p>
+                </div>
+  
+                <button class="btn btn-primary" onclick="openTrailer('{{ sea.homepage }}')">
+                  <ion-icon name="play"></ion-icon>
+  
+                  <li href="{{ sea.trailer_url }}">Watch Now</li>
+                </button>
+                
+              <iframe width="560" height="315" src="{{ sea.trailer_url }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                
+  
+  
+  
+              </div>
+  
+              <a download class="download-btn">
+                <span>Download</span>
+  
+                <ion-icon name="download-outline"></ion-icon>
+              </a>
+              <br>
+              
+        </section>
+        <section class="top-rated">
+          <style>
+            .top-rated {
+              background: url("{%static 'ass/assets/images/top-rated-bg.jpg' %}") no-repeat;
+              background-size: cover;
+              background-position: center;
+              padding-block: var(--section-padding);
+            }
+          </style>
+         
+
+            <div class="coantainer" style="display: flex;">
+              
+              <div style="flex: 1;">
+                <div class="like">
+                  <h2 class="hero-subtitle-for"><strong>Add Like:</strong></h2>
+                
+                  {% if user_like %} 
+                        <a href="{% url 'websiteapp:addlike' movieid=sea.name id=sea.id %}">
+                          <span class="fa-stack fa-2x">
+                            <i class="fas fa-heart fa-stack-6x fa-inverse" style="color: rgb(255, 0, 89);"></i>
+                            
+                          </span>
+                          
+                        </a>
+                  {% else %}
+                        <a href="{% url 'websiteapp:addlike' movieid=sea.name id=sea.id %}">
+                          <span class="fa-stack fa-2x">
+                            <i class="far fa-heart fa-stack-6x fa-inverse" style="color: rgb(255, 0, 89); size: 200px;"></i>
+                          </span>
+                          
+                        </a>
+                    
+                  {% endif %}
+                  {% if totallike == 1 %}
+                    <h3 class="text2023" style="color: white;">{{totallike}} Like</h3>
+                  {% else %}
+                    <p class="text2023" style="color: white;">{{totallike}} Likes</p>
+                  {% endif %}
+                  {% for rate in post_rate %}
+                    {% if request.user == rate.user %}
+                    
+                      <div class="rating-section">
+                        <div class="rate-label">
+                          <label class="section-subtitle"><strong>Your Rating:</strong></label>
+                        </div>
+                        <div class="rate-value">
+                          <h3 class="text2023">{{ rate.rating }}</h3>
+                        </div>
+                      </div>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+                <style>
+                  @media (min-width:768px){
+                    .like{
+                            margin-left: 50px;
+                  }
+                  }
+                </style>  
+                <br>
+              </div>
+              <div style="flex: 1;">
+                <h2 class="hero-subtitle-for"><span>Add To Favourites:</span></h2>
+                {% if user_fav %} 
+                <a href="{% url 'websiteapp:add-to-favourite' movieid=sea.name id=sea.id %}">
+                  <span class="fa-stack fa-2x">
+                    <i class="fas fa-star fa-stack-6x fa-inverse" style="color: gold;"></i>
+                  </span>
+                  
+                </a>
+                {% else %}
+                <a href="{% url 'websiteapp:add-to-favourite' movieid=sea.name id=sea.id %}">
+                  <span class="fa-stack fa-2x">
+                    <i class="far fa-star fa-stack-6x fa-inverse" style="color: gold; size: 200px;"></i>
+                  </span>
+                </a>
+                {% endif %}
+                <br>
+                <div class="rating-section" style="margin-bottom: 30px;">
+                  <div class="rate-label">
+                    <label class="section-subtitle"><strong>Average User Rating:</strong></label>
+                  </div>
+                  <div class="rate-value">
+                    <h3 class="text2023">{{ averagerate }}</h3>
+                  </div>
+                </div>
+              </div>
+              <div style="flex: 1;">
+      
+                <form method="post" action="{% url 'websiteapp:add-rating' movieid=sea.name  id=sea.id %}">
+                  {% csrf_token %}
+                  <label class="service-subtitle">Rate the movie:</label><br><br>
+                  <input type="number" class="center-placeholder" style="width: 250px;" placeholder="Rate Here" name="rating" min="1" max="10" step="0.1" required><br>
+                  <button type="submit" class="btn btn-primary" style="width: 300px;">Submit Rating</button><br>
+                  {% for rate in post_rate %}
+                    {% if request.user == rate.user %}
+                      <a class="button button-primary" href="{% url 'websiteapp:delete-rating' movieid=sea.name id=sea.id did=rate.id %}" >Delete My Rating</a>
+                    {% endif %}
+                  {% endfor %}
+                  <br>
+                  
+                </form>
+              </div>
+            </div>
+              {% include 'websiteapp/messages.html' %}
+          </div>
+          </section>
+          <section class="service">
+            <div class="container">
+    
+              <div class="service-banner">
+                
+                  <p class="service-subtitle">Comment Section</p>
+                  <br>
+    
+                    <h2 class="h2 service-title">Here You Can Comment To The Film &#x1F60A; ❤️</h2>
+                  
+              
+              </div>
+    
+              <div class="service-content">
+                <br>
+                
+                <form action="{% url 'websiteapp:add-comment' sea.name sea.id %}" method="post">
+                  {% csrf_token %}
+                    
+                    <div class="connect">
+                        <input type="text" name="text" class="center-placeholder" placeholder="Comment Here" >
+                      
+                        <br/>
+                      
+                        
+    
+                        <small><input type="submit" value="post" class="btn btn-primary"></small>
+                    </div>
+                    
+                </form>
+                <br>
+                <br>
+                <style>
+                  .text2023{
+                    color: #ffffff;
+                    mix-blend-mode: difference;
+                  }
+                </style>
+                <br>
+                <br>
+              </div>
+    
+              </div>
+    
+    
+            </div>
+            
+          </section>
+          <h2 class="h2 section-title">Comments:</h2>
+              <br>
+              <div>
+                  {% if not allcomments %} 
+                  <a class="section-subtitle"><h2>No Comments Yet</h2><a class="section-subtitle" href="#">Add now</a></a>
+                  {% else %}
+                      {% for comment in allcomments %} 
+                        <a class="section-subtitle"><strong>{{ comment.user }}-{{comment.date_added}}</strong></a><br/>
+                        <div class="container" style="display: flex;">
+                          <a class="service-subtitle" style="flex:1;padding-bottom: 20px;">{{ comment.text }} </a>
+                        
+                          <!--<p>Replies</p>
+                            {% for reply in comment.replies.all %}
+                            <div class="reply">
+                                <a class="section-subtitle"><strong>{{ reply.user.username }} - {{ reply.date_added }}</strong></a><br/>
+                                <a class="service-subtitle">{{ reply.usercomments }}</a>
+                            </div>
+                            {% endfor %}-->
+                            <div class="filter-list" style="flex:0.1;padding-bottom: 40px;">
+                              {% if user.is_authenticated %}
+                              <small><a class="button button-primary" href="{% url 'websiteapp:delete-comment' sea.name sea.id comment.id %}">Delete</a></small>
+                                  
+                              {% endif %}
+                            </div>
+                          <br><br>
+                        </div>
+                        </ul>
+                      {% endfor %}
+                  {% endif %}
+        <br>
+        
+        {% endif %}
+     
+        <style>
+          /* Common styles for both desktop and mobile */
+          .text2023 {
+            color: #ffffff;
+            mix-blend-mode: difference;
+          }
+      
+          /* Media query for screens up to 768px wide (typically mobile devices) */
+          @media only screen and (max-width: 768px) {
+            .coantainer{
+              display: flex;
+              box-sizing: border-box;
+              max-width: 100%;
+              flex-wrap: wrap;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+              padding: 20px;
+            }
+            .extra{
+                      display: flex;
+                      flex-wrap: wrap;
+                      flex-direction: column;
+                      
+                    }
+            .comment-container{
+              display: flex;
+              max-width: 100%;
+              flex-wrap: wrap;
+              width: 100%;
+              height: fit-content;
+
+            }
+            .txt{
+              height: fit-content;
+              width: fit-content;
+            }
+            .connect{
+              
+            width: fit-content;
+              height: 30px;font-size: 20px;border-radius: 50px;
+            }
+
+          @media (min-width: 768px) {
+            .coantainer{
+              display: flex;
+            
+              padding: 50px;
+            }
+            .connect{ 
+              width: 575px;height: 75px;font-size: 20px;border-radius: 50px;
+            }
+            
+            .like{
+                            margin-left: 50px;
+                  }
+                        
+          }
+          }
+        </style>
+    
+      <!-- 
+        - #TV SERIES
+      -->
+      <section class="top-rated">
+        <div class="container">
+    
+          <p class="section-subtitle">Online Streaming</p>
+        {% if recomand_list_m  %}  
+          <h2 class="h2 section-title">Recommended Movies </h2>
+        {% elif recomand_list_s  %}
+          <h2 class="h2 section-title">Recommended Series </h2>
+        {% endif %}
+    
+          <ul class="movies-list">
+      {% if recomand_list_m  %}
+        {% for rec in recomand_list_m %}
+            <li>
+              <div class="movie-card">
+        
+                <a href="{% url 'websiteapp:movie-details' rec.title|slugify rec.id %}">
+                  <figure class="card-banner">
+                    <img src="https://image.tmdb.org/t/p/w500{{rec.poster_path}}" alt="{{series.title}}">
+                  </figure>
+                </a>
+    
+                <div class="title-wrapper">
+                  <a href="{% url 'websiteapp:movie-details' rec.title|slugify rec.id %}">
+                    <h3 class="card-title">{{rec.title}}</h3>
+                  </a>
+    
+                  <time datetime="2022">{{rec.release_date}}</time>
+                </div>
+    
+                <div class="card-meta">
+                  <div class="badge badge-outline">2K</div>
+    
+                  <div class="duration">
+                    <ion-icon name="time-outline"></ion-icon>
+    
+                    <time datetime="PT122M">{{rec.popularity}}</time>
+                  </div>
+    
+                  <div class="rating">
+                    <ion-icon name="star"></ion-icon>
+    
+                    <data>{{rec.vote_average}}0</data>
+                  </div>
+                </div>
+    
+              </div>
+            </li>
+        {% endfor %}
+      {% endif %}
+      {% if recomand_list_s %}
+        {% for rec in recomand_list_s %}
+          <li>
+            <div class="movie-card">
+      
+              <a href="{% url 'websiteapp:movie-details' rec.title rec.id %}">
+                <figure class="card-banner">
+                  <img src="https://image.tmdb.org/t/p/w500{{rec.poster_path}}" alt="{{series.title}}">
+                </figure>
+              </a>
+
+              <div class="title-wrapper">
+                <a href="{% url 'websiteapp:movie-details' rec.title rec.id %}">
+                  <h3 class="card-title">{{rec.title}}</h3>
+                </a>
+
+                <time datetime="2022">{{rec.release_date}}</time>
+              </div>
+
+              <div class="card-meta">
+                <div class="badge badge-outline">2K</div>
+
+                <div class="duration">
+                  <ion-icon name="time-outline"></ion-icon>
+
+                  <time datetime="PT122M">{{rec.popularity}}</time>
+                </div>
+
+                <div class="rating">
+                  <ion-icon name="star"></ion-icon>
+
+                  <data>{{rec.vote_average}}0</data>
+                </div>
+              </div>
+
+            </div>
+          </li>
+        {% endfor %}
+      {% endif %}    
+    
+        </div>
+      </section>
+    
+
+      
+       
+    </article>
+  </main>
+
+
+
+
+
+  
+
+  <!-- 
+    - #FOOTER
+  -->
+
+  <footer class="footer">
+
+    <div class="footer-top">
+      <div class="container">
+
+        <div class="footer-brand-wrapper">
+
+          <a href="/" class="logo">
+            <div class="coontainer">
+            <img src="{% static 'cinelogo.png'%}" alt="Cinegracia" width="75" height="75" >
+            <p class="hero-subtitle-for">Cinegracia</p>
+            </div>
+          </a>
+
+          <ul class="footer-list">
+
+            <li>
+              <a href="/" class="footer-link">Home</a>
+            </li>
+
+            <li>
+              <a href="#" class="footer-link">Movie</a>
+            </li>
+
+            <li>
+              <a href="#" class="footer-link">TV Show</a>
+            </li>
+
+            <li>
+              <a href="#" class="footer-link">Web Series</a>
+            </li>
+
+            <li>
+              <a href="#" class="footer-link">Pricing</a>
+            </li>
+
+          </ul>
+
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="quicklink-wrapper">
+
+          <ul class="quicklink-list">
+
+            <li>
+              <a href="#" class="quicklink-link">Faq</a>
+            </li>
+
+            <li>
+              <a href="#" class="quicklink-link">Help center</a>
+            </li>
+
+            <li>
+              <a href="#" class="quicklink-link">Terms of use</a>
+            </li>
+
+            <li>
+              <a href="#" class="quicklink-link">Privacy</a>
+            </li>
+
+          </ul>
+
+          <ul class="social-list">
+
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-facebook"></ion-icon>
+              </a>
+            </li>
+
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-twitter"></ion-icon>
+              </a>
+            </li>
+
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-pinterest"></ion-icon>
+              </a>
+            </li>
+
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-linkedin"></ion-icon>
+              </a>
+            </li>
+
+          </ul>
+
+        </div>
+
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container">
+
+        <p class="copyright">
+          &copy; 2022 <a href="#">sudharcruz</a>. All Rights Reserved
+        </p>
+
+        <img src="{%static 'ass/assets/images/footer-bottom-img.png' %}" alt="Online banking companies logo" class="footer-bottom-img">
+
+
+      </div>
+    </div>
+    <style>
+      @media(min-width:768px){
+      .center-placeholder {
+        width: 450px;
+        height: 65px;
+        font-size: large;
+        border-radius: 50px;
+        text-align: center;
+      }
+    }
+      @media (max-width:768px){
+        .center-placeholder {
+        width: 350px;
+        height: 45px;
+        font-size: large;
+        border-radius: 50px;
+        text-align: center;
+      }
+      }
+      .center-placeholder::placeholder {
+        text-align: center;
+      }
+
+      .center-placeholder:-ms-input-placeholder {
+        color: transparent;
+      }
+
+      .center-placeholder::-ms-input-placeholder {
+        color: transparent;
+      }
+
+      .center-placeholder::placeholder-shown {
+        text-align: center;
+      }
+
+      .movie-detail {
+  position: relative;
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+.movie-detail::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("https://image.tmdb.org/t/p/original{{ sea.backdrop_path }}") no-repeat;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.5; 
+}
+
+.movie-detail .container {
+  position: relative; 
+  z-index: 1;
+}
+
+.coontainer{
+            display: flex;
+            align-items: center;
+            margin-right: 10px;
+          }
+
+.movie-detail iframe {
+  position: relative;
+  z-index: 2; 
+}
+
+    </style>
+    <script src="{% static 'ass/assets/js/cards.js' %}"></script>
+    <script>
+      function openTrailer(url){
+        window.open(url,'_blank');
+      }
+    </script>
+
+  </footer>
+
+
+
+
+
+  <!-- 
+    - #GO TO TOP
+  -->
+
+  <a href="#top" class="go-top" data-go-top>
+    <ion-icon name="chevron-up"></ion-icon>
+  </a>
+
+  <style>
+    .movie-card :is(.duration, .rating) {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--gainsboro);
+  font-size: var(--fs-11);
+  font-weight: var(--fw-500);
+  }
+  
+  .movie-card :is(.duration, .rating) ion-icon {
+  font-size: 30px; /* Adjust the font-size value to your preference */
+  --ionicon-stroke-width: 2px; /* Adjust the stroke width value to your preference */
+  color: var(--citrine);
+  }
+
+  .rating-section {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+          }
+        
+          .rate-label {
+            margin-right: 15px;
+          }
+        
+          .rate-value {
+            font-size: 20px;
+          }
+  
+  </style>
+
+
+  <script>
+    setTimeout(function(){
+      if ($('#msg').length > 0) {
+        $('#msg').remove();
+      }
+    }, 2000)
+  </script> 
+  <!-- 
+    - custom js link
+  -->
+  <script src="{% static 'ass/assets/js/script.js' %}"></script>
+  
+  <!-- 
+    - ionicon link
+  -->
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+</body>
+
+</html>

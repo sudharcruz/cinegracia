@@ -1,0 +1,1599 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cinegracia - Best movie collections</title>
+
+  <!-- 
+    - favicon
+  -->
+  <link rel="shortcut icon" href="{% static 'cinelogo.png' %}" type="image">
+
+  <!-- 
+    - custom css link
+  -->
+  <link rel="stylesheet" href="{% static 'ass/css/style.css' %}" type="text/css">
+  <link rel="stylesheet" href="{% static 'ass/css/cards.css' %}" type="text/css" href="https://cdn.jsdelivr.net/jquery.slick/1.8.1/slick.css">
+  <link rel="stylesheet" href="{% static 'ass/css/slick.css' %}" >
+  <link rel="stylesheet" href="{% static 'ass/css/slick-theme.css' %}" >
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+  
+
+
+  <!-- 
+    - google font link
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body id="top">
+
+  <!-- 
+    - #HEADER
+  -->
+
+  <header class="header" data-header>
+    <div class="container">
+
+      <div class="overlay" data-overlay></div>
+
+      <a href="/" class="logo">
+        
+        <div class="coontainer">
+          <img src="{% static 'cinelogo.png'%}" alt="Cinegracia" width="75" height="75">
+          <p class="hero-subtitle-for">Cinegracia</p>
+        </div>
+        <style>
+          
+          .hero-subtitle-for {
+              margin-right: 20px;
+              color: var(--citrine);
+              font-size: var(--fs-4);
+              font-weight: var(--fw-700);
+              margin-bottom: 0px;
+              margin-left: 5px;
+            }
+          @media (max-width:768px){
+            .header.active{
+              background: transparent;
+            }
+          
+          }
+          @media (min-width:768px){
+            .header.active{
+              background: hsla(0,0%,0%,0.5);
+            }
+          }
+
+        </style>
+      </a>
+
+      <div class="header-actions">
+
+        
+        {% if user.is_authenticated %}
+          <li>
+            <a class="btn btn-primary" href="register/logout" >Logout</a>
+          </li>
+        {% else %}
+            <li><a class="btn btn-primary" href="register">Sign-in</a></li>
+            <li><a class="btn btn-primary" href="register/login">Login</a></li>
+        {% endif %}
+        </ul>
+
+        
+
+      </div>
+
+      <button class="menu-open-btn" data-menu-open-btn>
+        <ion-icon name="reorder-two"></ion-icon>
+      </button>
+
+      <nav class="navbar" data-navbar>
+
+        <div class="navbar-top">
+
+          <a href="/" class="logo">
+            <div class="coontainer">
+            <img src="{% static 'cinelogo.png'%}" alt="Cinegracia" width="75" height="75" >
+            <p class="hero-subtitle-for">Cinegracia</p>
+            </div>
+          </a>
+
+          <button class="menu-close-btn" data-menu-close-btn>
+            <ion-icon name="close-outline"></ion-icon>
+          </button>
+          
+        </div>
+
+        <ul class="navbar-list">
+          
+            <li>
+              
+              <a class="navbar-link" href="/" >Home</a>
+            </li>
+
+            <li>
+              <div class="dropdown">
+                <button class="navbar-link" >Movie</button>
+                <ul class="dropdown-content">
+                  <li class="main-genre">
+                    <a>Genres</a>
+                    <ul class="sub-genres">
+                      {% for genre in genres %}
+                        <li><a href="{% url 'websiteapp:discover-genre' genre_name=genre.name genreid=genre.id section='movie-genre' %}">{{genre.name}}</a></li>
+                      {% endfor %}
+                    </ul>
+                  </li>
+                  <li class="main-genre">
+                    <a>Languages</a>
+                    <ul class="sub-genres">
+                      {% for lan in lan_m %}
+                      <li><a href="{% url 'websiteapp:discover-genre' lan.iso_639_1 lan.english_name 'movie-lan' %}">{{lan.english_name}}</a></li>
+                      {% endfor %}
+                    </ul>
+                  </li>
+                  <li class="main-genre">
+                    <a href="{% url 'websiteapp:allshows' section='movie-trend' id=6 %}">Trending Movie</a>
+                  </li>
+                  
+                </ul>
+              </div>
+            </li>
+
+            <li>
+              <div class="dropdown">
+                <button class="navbar-link">Tv Series</button>
+                <ul class="dropdown-content">
+                  <li class="main-genre">
+                    <a>Genres</a>
+                    <ul class="sub-genres">
+                      {% for gen in genress %}
+                        <li><a href="{% url 'websiteapp:discover-genre' gen.name|urlencode gen.id 'series-genre' %}">{{gen.name}}</a></li>
+                      {% endfor %}
+                    </ul>
+                  </li>
+                  <li class="main-genre">
+                      <a>Languages</a>
+                      <ul class="sub-genres">
+                        {% for lan in lan_m %}
+                        <li><a href="{% url 'websiteapp:discover-genre' lan.iso_639_1 lan.english_name 'series-lan' %}">{{lan.english_name}}</a></li>
+                        {% endfor %}  
+                      </ul>
+                    
+                  </li>
+                  <li class="main-genre">
+                    <a href="{% url 'websiteapp:allshows' section='series-trend' id=7  %}">Trending Series</a>
+                  </li>
+                  
+                </ul>
+              </div>
+            </li>          
+            <li>
+              {% if user.is_authenticated %}
+                <a class="navbar-link" href="{% url 'websiteapp:favlist' %}">My Favourites</a><br>
+              {% else %} 
+                <a class="navbar-link" href="{% url 'register:register' %}" >Favourites</a><br>
+              {% endif %}
+              <style>
+                .navbar-link:hover {
+                  text-shadow: 0 0 7px #ff7575,
+                                0 0 10px #f9ffe4,
+                                0 0 21px #ebfde2,
+                                0 0 42px rgb(101, 240, 159),
+                                0 0 82px rgb(111, 255, 140),
+                                0 0 92px rgb(135, 255, 109),
+                                0 0 102px rgb(83, 255, 198),
+                                0 0 151px rgb(119, 255, 107);}
+              </style>
+            </li>
+            
+              <div class="search-container" style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center;">
+                <input type="search" class="form-control" placeholder="Enter Search" aria-label="search" name="searched" id="searched"><br>
+                <button type="button" onclick="searchMovies()" class="but" style="margin-right: 20px;font-size: medium;font-weight:400;">Search</button>
+              </div>
+              <div class="container">
+              {% if user.is_authenticated %}
+                <li>
+                  {% if user.profile.dp %}
+                    <div class="dropdown-1">
+                      <div class="profile-container">
+                        <img src="{{user.profile.dp.url}}" width="65" height="65" style="border-radius: 50px;"> <br>
+                        <div class="dropdown-content-1">
+                          <a href="{% url 'websiteapp:myprofile' user.id %}">View Profile</a>
+                          <a href="{% url 'websiteapp:update-profile' user.id %}">Update Profile</a>
+                          <a href="">Update info</a>
+                        </div>
+                      </div>
+                    </div>
+                  {% else %}
+                    <div class="dropdown-1">
+                      <div class="profile-container">
+                        <img src="{% static 'ass/assets/images/default_dp.jpeg' %}" width="65" height="65" style="border-radius: 50px;"><br>
+                        <div class="dropdown-content-1">
+                          <a href="{% url 'websiteapp:myprofile' user.id %}">View Profile</a>
+                          <a href="{% url 'websiteapp:update-profile' user.id %}">Update Profile</a>
+                          <a href="">Update info</a>
+                          {% if request.user.profile %}
+                          {% else %}
+                            <a href="{% url 'websiteapp:createprofile' user.id %}">Create Profile</a>
+                          {% endif %}
+                        </div>
+                      </div>
+                    </div>
+                  {% endif %}
+                </li>
+              {% endif %}
+              <li>
+                {% if user.is_authenticated %}
+                    <a class="neonText">Hello {{user.username}} !</a>
+                    <style>
+                      
+                    </style>
+                {% else %}
+                    
+                {% endif %}
+              </li>
+            </div>
+          </ul>
+          <div class="nav">
+            {% if user.is_authenticated %}
+              <li>
+                <a class="btn btn-primary" href="register/logout">Logout</a>
+              </li>
+            {% else %}
+              <li><a class="btn btn-primary" href="register">Sign-in</a></li> <br>
+              <li><a class="btn btn-primary" href="register/login">Login</a></li>
+            {% endif %}
+          </div>
+          <style>
+            @media (min-width:768px){
+              .nav{
+                display: none;
+              }
+              
+            }
+          </style>
+        <br>
+        <ul class="navbar-social-list">
+
+          <li>
+            <a href="#" class="navbar-social-link">
+              <ion-icon name="logo-twitter"></ion-icon>
+            </a>
+          </li>
+
+          <li>
+            <a href="#" class="navbar-social-link">
+              <ion-icon name="logo-facebook"></ion-icon>
+            </a>
+          </li>
+
+          <li>
+            <a href="#" class="navbar-social-link">
+              <ion-icon name="logo-pinterest"></ion-icon>
+            </a>
+          </li>
+
+          <li>
+            <a href="#" class="navbar-social-link">
+              <ion-icon name="logo-instagram"></ion-icon>
+            </a>
+          </li>
+
+          <li>
+            <a href="#" class="navbar-social-link">
+              <ion-icon name="logo-youtube"></ion-icon>
+            </a>
+          </li>
+
+        </ul>
+
+      </nav>
+      
+    </div>
+  </header>
+  <style>
+    
+  </style>
+
+
+
+
+
+  <main>
+    <article>
+
+      <!-- 
+        - #HERO
+      -->
+
+    <section class="hero" >
+        <style>
+          .hero {
+              background: url("{%static 'ass/assets/images/GOTD.jpg' %}") no-repeat;
+              background-size: cover;
+              background-position: center;
+              min-height: 750px;
+              height: 100vh;
+              max-height: 1000px;
+              display: flex;
+              justify-content: flex-start;
+              align-items: center;
+              padding-block: var(--section-padding);
+}
+        </style>
+
+      <!-- Add the Swiper CSS -->
+
+      <section class="swiper-container">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide">
+            <div class="movieContainer">
+              <div class="movie_card" id="bright">
+                <div class="info_section">
+                  <div class="movie_header">
+                    
+                  </div>
+                  <div class="movie_desc">
+                      <a class="h2 section-title" href="{% url 'websiteapp:allshows' section='movie' id=1 %}">
+                        <center><strong>Movies</strong></center>
+                      </a>
+                  </div>
+                  <div class="movie_social"></div>
+                </div>
+                <div class="blur_back bright_back"></div>
+              </div>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="movieContainer">
+              <div class="movie_card" id="tomb">
+                <div class="info_section">
+                  <div class="movie_header">
+                    
+                  </div>
+                  <div class="movie_desc">
+                    <a class="h2 section-title" href="{% url 'websiteapp:allshows' section='series' id=3 %}">
+                      <center><strong><span>Series</span></strong></center>
+                    </a>
+                  </div>
+                  <div class="movie_social"></div>
+                </div>
+                <div class="blur_back tomb_back"></div>
+                <style>
+                  .tomb_back{
+                    background: url("{% static 'ass/assets/images/bg2.jpg' %}");
+                  }
+                </style>
+              </div>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="movieContainer">
+              <div class="movie_card" id="ave">
+                <div class="info_section">
+                  <div class="movie_header">
+                    
+                  </div>
+                  <div class="movie_desc">
+                    <a class="h2 section-title" href="{% url 'websiteapp:allshows' section='collection' id=4 %}">
+                      <strong><span>Collection</span></strong>
+                    </a>
+                  </div>
+                  <div class="movie_social"></div>
+                </div>
+                <div class="blur_back ave_back"></div>
+                <style>
+                  .ave_back {
+  background: url("{% static 'ass/assets/images/bg4.jpg' %}");
+}
+                </style>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Add the pagination bullets -->
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>  
+      </section>
+      
+      
+  <style>
+    .bright_back {
+  background-image: url("{% static 'ass/assets/images/bg.jpg' %}");
+  
+
+}
+  </style>
+
+
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+<script>
+  var swiper = new Swiper('.swiper-container', {
+    slidesPerView: 'auto',
+    spaceBetween: 20,
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+    },
+    keyboard: {
+    enabled: true,
+    onlyInViewport: false, 
+  },
+  noSwiping: true,
+  });
+</script>
+
+
+
+
+    </section>
+
+
+
+
+
+      <!-- 
+        - #UPCOMING
+      -->
+
+      <section class="upcoming">
+        <style>
+          .upcoming {
+                  background: url("{%static 'ass/assets/images/upcoming-bg.png' %}") no-repeat;
+                  background-size: cover;
+                  background-position: center;
+                  padding-block: var(--section-padding);
+          }
+          
+        </style>
+        <div class="container">
+
+          <div class="flex-wrapper">
+
+            <div class="title-wrapper">
+              <p class="section-subtitle">Online Streaming</p>
+
+              <h2 class="h2 section-title">Upcoming Movies</h2>
+            </div>
+
+            <ul class="filter-list">
+
+              <li>
+                <a class="filter-btn" href="{% url 'websiteapp:allshows' section='upcoming' id=2 %}">Upcoming</a>
+              </li>
+
+              <li>
+                <a class="filter-btn" href="{% url 'websiteapp:allshows' section='movie' id=1 %}">Movies</a>
+              </li>
+
+              <li>
+                <a class="filter-btn" href="{% url 'websiteapp:allshows' section='series' id=3 %}">TV Series</a>
+              </li>
+
+              <li>
+                <a class="filter-btn" href="{% url 'websiteapp:allshows' section='collection' id=4 %}" >Collection</a>
+              </li>
+
+            </ul>
+
+          </div>
+
+          <ul class="movies-list has-scrollbar">
+      {% for upcoming in upcomings %}
+        
+            <li>
+              <div class="movie-card">
+             
+                <a href="{%  url 'websiteapp:movie-details' upcoming.title upcoming.id %}">
+             
+                  <figure class="card-banner">
+                    <img src={{upcoming.poster_path}} alt="The Northman movie poster">
+                  </figure>
+                  
+                </a>
+
+                <div class="title-wrapper">
+                  
+                  <a href="{%  url 'websiteapp:movie-details' upcoming.title|slugify upcoming.id %}">
+                    <h3 class="card-title">{{upcoming.title}}</h3>
+                  </a>
+
+                  <time datetime="2022">{{upcoming.release_date}}</time>
+                </div>
+
+                <div class="card-meta">
+                  <div class="badge badge-outline">HD</div>
+
+                  <div class="duration">
+                    <ion-icon name="time-outline"></ion-icon>
+
+                    <time datetime="PT137M">{{upcoming.popularity}}</time>
+                  </div>
+
+                  <div class="rating">
+                    <ion-icon name="star"></ion-icon>
+
+                  <data class="hero-subtitle-for">{{upcoming.vote_average}}</data>
+                  </div>
+                </div>
+                  
+              </div>
+            </li>
+      {% endfor %}
+        </div>
+      </section>
+
+
+
+
+
+      <!-- 
+        - #SERVICE
+      -->
+
+      <section class="service">
+        <style>
+          .service {
+                background: url("{%static 'ass/assets/images/service-bg.jpg' %}") no-repeat;
+                background-size: cover;
+                background-position: center;
+                padding-block: var(--section-padding);
+}
+        </style>
+
+        {% if user.is_authenticated %}
+
+          <div class="container" style="display: flex;flex-wrap: wrap;">
+
+          <div class="container" style="flex: 1; max-width: 100%;">
+          
+            <div class="service-content">
+
+              <strong><p class="service-subtitle" style="font-size: large;font-weight: bold;box-sizing: border-box;word-wrap: break-word;max-width: fit-content;">Hey {{user.username}}</p></strong>
+
+              
+
+              <p class="service-text" style="font-size: medium;">
+                Welcome back to Cinegracia! We're thrilled to see you return to our website. As a valued account holder, you have access to a world of cinematic delights. Whether you're a movie buff or simply looking for an entertaining escape, Cinegracia is here to cater to your every cinematic need. From the latest blockbusters to timeless classics, we've curated a diverse collection of films to suit your taste. Sit back, relax, and immerse yourself in the magic of the silver screen. Thank you for choosing Cinegracia, and we hope you enjoy your time with us
+              </p>
+
+              <ul class="service-list">
+
+                <li>
+                  <div class="service-card">
+
+                    <div class="card-icon">
+                      <ion-icon name="tv"></ion-icon>
+                    </div>
+
+                    <div class="card-content">
+                      <h3 class="h3 card-title">Enjoy on Your TV.</h3>
+
+                      <p class="card-text">
+                        Lights, camera, and Cinegracia – where dreams come to life, one movie at a time
+                      </p>
+                    </div>
+
+                  </div>
+                </li>
+
+                <li>
+                  <div class="service-card">
+
+                    <div class="card-icon">
+                      <ion-icon name="videocam"></ion-icon>
+                    </div>
+
+                    <div class="card-content">
+                      <h3 class="h3 card-title">Watch Everywhere.</h3>
+
+                      <p class="card-text">
+                        Unlock a world of cinematic wonders at Cinegracia, where every film holds the power to captivate hearts and ignite imaginations.
+                      </p>
+                    </div>
+
+                  </div>
+                </li>
+
+              </ul>
+
+            </div>
+            <div id="favourite-section" style="flex: 1;padding-left: 200px;padding-bottom: 100px; max-width: 100%; padding: 20px;box-sizing: border-box;">
+                <p class="service-subtitle-pf" style="font-weight: bold;">Profile Picture</p><br>
+                <div class="profile-picture-container">
+                  {% if user.profile.dp %}
+                    <img class="profile-picture" src="{{user.profile.dp.url}}" onclick="showProfilePicture(this)"> <br>
+                  {% else %}
+                    <img class="profile-picture" src="{% static 'ass/assets/images/default_dp.jpeg' %}" alt="" onclick="showProfilePicture(this)"> <br>
+                  {% endif %}
+                </div><br><br><br>
+                <h2 class="service-subtitle-pf" style="font-weight: bold;" >Bio</h2> <br>
+                  <div class="bio-container">
+                  
+                      <p class="bio-text">{{user.profile.bio}}</p>
+                    
+                  </div>
+            </div>
+          </div>
+          </div>
+        {% else %}
+        <div class="container" style="display: flex;flex-wrap: wrap;">
+
+          <div class="container" style="flex: 1;max-width: 100%;">
+          
+            <div class="service-content">
+
+              <strong><p class="service-subtitle" style="font-size: large;font-weight: bold;">Welcome To Cinegracia</p></strong>
+
+              
+
+              <p class="service-text" style="font-size: medium;">
+                Welcome to Cinegracia! We're thrilled to see you in our website. As a valued account holder, you have access to a world of cinematic delights. Whether you're a movie buff or simply looking for an entertaining escape, Cinegracia is here to cater to your every cinematic need. From the latest blockbusters to timeless classics, we've curated a diverse collection of films to suit your taste. Sit back, relax, and immerse yourself in the magic of the silver screen. Thank you for choosing Cinegracia, and we hope you enjoy your time with us
+              </p>
+
+              <ul class="service-list">
+
+                <li>
+                  <div class="service-card">
+
+                    <div class="card-icon">
+                      <ion-icon name="tv"></ion-icon>
+                    </div>
+
+                    <div class="card-content">
+                      <h3 class="h3 card-title">Enjoy on Your TV.</h3>
+
+                      <p class="card-text">
+                        Lights, camera, and Cinegracia – where dreams come to life, one movie at a time
+                      </p>
+                    </div>
+
+                  </div>
+                </li>
+
+                <li>
+                  <div class="service-card">
+
+                    <div class="card-icon">
+                      <ion-icon name="videocam"></ion-icon>
+                    </div>
+
+                    <div class="card-content">
+                      <h3 class="h3 card-title">Watch Everywhere.</h3>
+
+                      <p class="card-text">
+                        Unlock a world of cinematic wonders at Cinegracia, where every film holds the power to captivate hearts and ignite imaginations.
+                      </p>
+                    </div>
+
+                  </div>
+                </li>
+
+              </ul>
+
+            </div>
+            <br>
+            <div id="favourite-section" style="flex: 1;padding-left: 200px;padding-bottom: 100px; max-width: 100%; padding: 20px;box-sizing: border-box;">
+              <center><h2 class="hero-subtitle-for">Admin's Corner</h2></center><br>
+              <p class="service-subtitle-pf" style="font-weight: bold;">Profile Picture</p><br>
+              <div class="profile-picture-container">
+                
+                <img class="profile-picture" src="{{suser.profile.dp.url}}" onclick="showProfilePicture(this)"> <br>
+              </div><br><br><br>
+              <h2 class="service-subtitle-pf" style="font-weight: bold;" >Bio</h2> <br>
+                <div class="bio-container">
+                
+                    <p class="bio-text">{{ suser.profile.bio }}</p>
+              
+                  
+                </div><br><br>
+              <h2 class="service-subtitle-pf" style="font-weight: bold;" >For all inquiries and work-related matters, please contact us via email. We are here to assist and explore opportunities for collaboration.</h2> <br>
+              <h2 class="hero-subtitle-for" >Email : cinegracia@gmail.com</h2>
+              
+            </div>
+          </div>
+          </div>
+        
+          
+        {% endif %}
+      </section>
+
+      <style>
+      </style>
+      
+      
+      
+
+
+
+      <!-- 
+        - #TOP RATED
+      -->
+
+      <section class="top-rated">
+        <style>
+          .top-rated {
+  background: url("{%static 'ass/assets/images/top-rated-bg.jpg' %}") no-repeat;
+  background-size: cover;
+  background-position: center;
+  padding-block: var(--section-padding);
+}
+        </style>
+        <div class="container">
+
+          <p class="section-subtitle">Online Streaming</p>
+
+          <h2 class="h2 section-title">Top Rated Movies</h2>
+
+          <ul class="filter-list">
+
+            <li>
+              <a class="filter-btn" href="{% url 'websiteapp:allshows' section='movie' id=1 %}" >Movies</a>
+            </li>
+
+            <li>
+              <a class="filter-btn" href="{% url 'websiteapp:allshows' section='series' id=3 %}">TV Series</a>
+            </li>
+
+            <li>
+              <a class="filter-btn" href="{% url 'websiteapp:allshows' section='upcoming' id=2 %}">Upcoming</a>
+            </li>
+
+            <li>
+              <a class="filter-btn" href="{% url 'websiteapp:allshows' section='collection' id=4 %}">Collection</a>
+            </li>
+
+          </ul>
+
+          <ul class="movies-list">
+      {% for fut in futail %}
+            <li>
+              <div class="movie-card">
+        
+                <a href="{%  url 'websiteapp:movie-details' fut.moviename fut.id %}">
+                  <figure class="card-banner">
+                    <img src="{{fut.image.url}}" alt="Sonic the Hedgehog 2 movie poster">
+                  </figure>
+                </a>
+
+                <div class="title-wrapper">
+                  <a href="{%  url 'websiteapp:movie-details' fut.moviename fut.id %}">
+                    <h3 class="card-title">{{fut.moviename}}</h3>
+                  </a>
+
+                  <time datetime="2022">{{fut.release}}</time>
+                </div>
+
+                <div class="card-meta">
+                  <div class="badge badge-outline">2K</div>
+
+                  <div class="duration">
+                    <ion-icon name="time-outline"></ion-icon>
+
+                    <time datetime="PT122M">{{fut.duration}}</time>
+                  </div>
+
+                  <div class="rating">
+                    <ion-icon name="star"></ion-icon>
+
+                    <data>{{fut.rating}}</data>
+                  </div>
+                </div>
+
+              </div>
+            </li>
+
+      {% endfor %}    
+
+        </div>
+      </section>
+
+
+
+
+
+      <!-- 
+        - #TV SERIES
+      -->
+
+      <section class="tv-series">
+        <style>
+          .tv-series {
+  background: url("{%static 'ass/assets/images/tv-series-bg.jpg' %}") no-repeat;
+  background-size: cover;
+  background-position: center;
+  padding-block: var(--section-padding);
+}
+
+        </style>
+        <div class="container">
+
+          <p class="section-subtitle">Best TV Series</p>
+
+          <h2 class="h2 section-title">World Best TV Series</h2>
+
+          <ul class="movies-list">
+
+            <li>
+      {% for serie in series %}
+              <div class="movie-card">
+
+                <a href="{%  url 'websiteapp:movie-details' serie.title serie.id %}">
+                  <figure class="card-banner">
+                    <img src="https://image.tmdb.org/t/p/w500{{serie.poster_path}}" alt="Moon Knight movie poster">
+                  </figure>
+                </a>
+
+                <div class="title-wrapper">
+                  <a href="{%  url 'websiteapp:movie-details' serie.title serie.id  %}">
+                    <h3 class="card-title">{{serie.title}}</h3>
+                  </a>
+
+                  <time datetime="2022">{{serie.release_date}}</time>
+                </div>
+
+                <div class="card-meta">
+                  <div class="badge badge-outline">2K</div>
+
+                  <div class="duration">
+                    <ion-icon name="time-outline"></ion-icon>
+
+                    <time datetime="PT47M">{{serie.popularity}}</time>
+                  </div>
+
+                  <div class="rating">
+                    <ion-icon name="star"></ion-icon>
+
+                    <data>{{serie.vote_average}}</data>
+                  </div>
+                </div>
+                <br>
+
+                {% for sut in sure %}
+                  <button class="btn btn-primary">
+                    <ion-icon name="play"></ion-icon>
+
+                    <span href="{% url 'websiteapp:favouritelist' sut.video %}">Watch Now</span>
+                  </button>
+                {% endfor %}
+           
+
+  
+
+              </div>
+            </li>
+      {% endfor %}
+  
+      </section>
+      <section class="top-rated">
+        <div class="container">
+
+          <p class="section-subtitle">Online Streaming</p>
+
+          <h2 class="h2 section-title">Popular Movies</h2>
+
+          <ul class="filter-list">
+
+            <li>
+              <a class="filter-btn" href="{% url 'websiteapp:allshows' section='movie' id=1 %}">Movies</a>
+                
+            </li>
+
+            <li>
+              <a class="filter-btn" href="{% url 'websiteapp:allshows' section='series' id=3 %}">TV Shows</a>
+            </li>
+
+            <li>
+              <a class="filter-btn" href="{% url 'websiteapp:allshows' section='upcoming' id=2 %}">Upcoming</a>
+            </li>
+
+            <li>
+              <a class="filter-btn" href="{% url 'websiteapp:allshows' section='collection' id=4 %}">Collection</a>
+            </li>
+
+          </ul>
+
+          <ul class="movies-list">
+      {% for movie in movies %}
+            <li>
+              <div class="movie-card">
+        
+                <a href="{% url 'websiteapp:movie-details' movie.title movie.id %}">
+                  <figure class="card-banner">
+                    <img src="{{movie.poster_path}}" alt="Sonic the Hedgehog 2 movie poster">
+                  </figure>
+                </a>
+
+                <div class="title-wrapper">
+                  <a href="{% url 'websiteapp:movie-details' movie.title movie.id %}">
+                    <h3 class="card-title">{{movie.title}}</h3>
+                  </a>
+
+                  <time datetime="2022">{{movie.release_date}}</time>
+                </div>
+
+                <div class="card-meta">
+                  <div class="badge badge-outline">2K</div>
+
+                  <div class="duration">
+                    <ion-icon name="time-outline"></ion-icon>
+
+                    <time datetime="PT122M">{{movie.popularity}}</time>
+                  </div>
+
+                  <div class="rating">
+                    <ion-icon name="star"></ion-icon>
+
+                    <data>{{movie.vote_average}}0</data>
+                  </div>
+                </div>
+
+              </div>
+            </li>
+
+      {% endfor %}    
+
+        </div>
+      </section>
+
+
+
+
+
+      <!-- 
+        - #CTA
+      -->
+
+      <section class="cta">
+        <style>
+          .cta {
+  background: url("{%static 'ass/assets/images/cta-bg.jpg' %}") no-repeat;
+  background-size: cover;
+  background-position: center;
+  text-align: center;
+  padding-block: 50px;
+}
+
+        </style>
+        <div class="container">
+
+          <div class="title-wrapper">
+            <h2 class="cta-title">Trial start first 30 days.</h2>
+
+            <p class="cta-text">
+              Enter your email to create or restart your membership.
+            </p>
+          </div>
+
+          <form action="" class="cta-form">
+            <input type="email" name="email" required placeholder="Enter your email" class="email-field">
+
+            <button type="submit" class="cta-form-btn">Get started</button>
+          </form>
+
+        </div>
+      </section>
+
+    </article>
+  </main>
+  
+  </section>
+
+
+
+
+
+  <!-- 
+    - #FOOTER
+  -->
+
+  <footer class="footer">
+
+    <div class="footer-top">
+      <style>
+        .footer-top {
+  background: url("{%static 'ass/assets/images/footer-bg.jpg' %}") no-repeat;
+  background-size: cover;
+  background-position: center;
+  padding-block: 80px 50px;
+}
+
+      </style>
+      <div class="container">
+
+        <div class="footer-brand-wrapper">
+
+          <a href="/" class="logo">
+            <div class="coontainer">
+            <img src="{% static 'cinelogo.png'%}" alt="Cinegracia" width="75" height="75" >
+            <p class="hero-subtitle-for">Cinegracia</p>
+            </div>
+          </a>
+          <ul class="footer-list">
+
+            <li>
+              <a href="/" class="footer-link">Home</a>
+            </li>
+
+            <li>
+              <a href="#" class="footer-link">Movie</a>
+            </li>
+
+            <li>
+              <a href="#" class="footer-link">TV Show</a>
+            </li>
+
+            <li>
+              <a href="#" class="footer-link">Web Series</a>
+            </li>
+
+            <li>
+              <a href="#" class="footer-link">Pricing</a>
+            </li>
+
+          </ul>
+
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="quicklink-wrapper">
+
+          <ul class="quicklink-list">
+
+            <li>
+              <a href="#" class="quicklink-link">Faq</a>
+            </li>
+
+            <li>
+              <a href="#" class="quicklink-link">Help center</a>
+            </li>
+
+            <li>
+              <a href="#" class="quicklink-link">Terms of use</a>
+            </li>
+
+            <li>
+              <a href="#" class="quicklink-link">Privacy</a>
+            </li>
+
+          </ul>
+
+          <ul class="social-list">
+
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-facebook"></ion-icon>
+              </a>
+            </li>
+
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-twitter"></ion-icon>
+              </a>
+            </li>
+
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-pinterest"></ion-icon>
+              </a>
+            </li>
+
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-linkedin"></ion-icon>
+              </a>
+            </li>
+
+          </ul>
+
+        </div>
+
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container">
+
+        <p class="copyright">
+          &copy; 2022 <a href="#">Cinegracia</a>. All Rights Reserved
+        </p>
+
+        <img src="{% static 'ass/assets/images/footer-bottom-img.png' %}" alt="Online banking companies logo" class="footer-bottom-img">
+
+      </div>
+    </div>
+
+  </footer>
+
+
+
+
+
+  <!-- 
+    - #GO TO TOP
+  -->
+
+  <a href="#top" class="go-top" data-go-top>
+    <ion-icon name="chevron-up"></ion-icon>
+  </a>
+  <style>
+
+.search-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Styles for smaller screens (adjust the breakpoint as needed) */
+  @media (max-width: 768px) {
+    .search-container {
+      flex-direction: column;
+      align-items: center;
+    }
+    .but {
+      margin-left: 0;
+      margin-top: 10px;
+    }
+  }
+
+input[type="search"] {
+padding: 13px;
+border: none;
+border-radius: 20px;
+background-color: #f5f5f5;
+box-shadow: none;
+outline: none;
+width: 190px;
+font-size: 16px;
+}
+
+input[type="search"]::placeholder {
+color: #000000;
+}
+
+button[type="submit"] {
+background-color: rgb(255, 111, 0);
+color: #000000;
+border: none;
+border-radius: 20px;
+padding: 10px 20px;
+margin-left: 10px;
+cursor: pointer;
+color: var(--white);
+font-size: var(--fs-11);
+font-weight: var(--fw-700);
+text-transform: uppercase;
+letter-spacing: 2px;
+display: flex;
+align-items: center;
+gap: 1px;
+padding: 12px 9px;
+border: 2px solid rgb(8, 8, 8);
+border-radius: 50px;
+transition: var(--transition-1);
+}
+
+button[type="submit"]:hover {
+background-color: rgb(255, 243, 71);
+}
+
+.dropdown-1 {
+  position: relative;
+  display: inline-block;
+}
+
+.profile-container {
+  position: relative;
+}
+
+.dropdown-content-1 {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  padding: 8px;
+  z-index: 1;
+}
+
+.dropdown-1:hover .dropdown-content-1 {
+  display: block;
+}
+
+.dropdown-content-1 a {
+  color: black;
+  padding: 6px 8px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content-1 a:hover {
+  background-color: #f1f1f1;
+}
+
+  </style>
+
+
+<style>
+  .movie-card :is(.duration, .rating) {
+display: flex;
+align-items: center;
+gap: 5px;
+color: var(--gainsboro);
+font-size: var(--fs-11);
+font-weight: var(--fw-500);
+}
+
+.movie-card :is(.duration, .rating) ion-icon {
+font-size: 30px; /* Adjust the font-size value to your preference */
+--ionicon-stroke-width: 2px; /* Adjust the stroke width value to your preference */
+color: var(--citrine);
+}
+
+
+/* Base styles for larger screens */
+.movies-list.has-scrollbar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Create a 4-column grid */
+  gap: 30px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 25px;
+}
+
+.movies-list.has-scrollbar {
+  display: flex;
+  flex-direction: row; /* Changed from 'column' */
+  justify-content: flex-start;
+  gap: 30px;
+  overflow-x: auto; /* Changed from 'overflow-y' */
+  scroll-snap-type: inline mandatory;
+  padding-bottom: 25px;
+}
+
+
+
+.has-scrollbar::-webkit-scrollbar { height: 8px; }
+
+.has-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  box-shadow: 0 0 0 2px var(--citrine);
+  border-radius: 10px;
+}
+
+.has-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--gainsboro);
+  border-radius: 10px;
+  box-shadow: inset 0 1px 0 var(--black),
+              inset 0 -1px 0 var(--black);
+}
+
+/* Responsive styles for mobile devices */
+@media (max-width: 768px) {
+  .movies-list.has-scrollbar {
+    grid-template-columns: repeat(1, 1fr); /* Change to a 2-column grid for mobile */
+    gap: 15px; /* Reduce the gap between cards */
+  }
+
+  .movie-card {
+    min-width: calc(50% - 15px); /* Each card takes 50% of the container width minus the gap */
+  }
+}
+
+
+.coontainer{
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+          }
+          .hero-subtitle-for {
+              margin-right: 20px;
+              color: var(--citrine);
+              font-size: var(--fs-4);
+              font-weight: var(--fw-700);
+              margin-bottom: 0px;
+              margin-left: 5px;
+            }
+
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #ffffff;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  
+}
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {opacity: 0.5;}
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {display: block;}
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .navbar-link {
+text-shadow: 0 0 7px #ff7575,
+    0 0 10px #f9ffe4,
+    0 0 21px #ebfde2,
+    0 0 42px rgb(101, 240, 159),
+    0 0 82px rgb(111, 255, 140),
+    0 0 92px rgb(135, 255, 109),
+    0 0 102px rgb(83, 255, 198),
+    0 0 151px rgb(119, 255, 107);}
+    .neonText {
+color: #fff;
+text-shadow:
+    0 0 7px #fff,
+    0 0 10px #f9ffe4,
+    0 0 21px #ebfde2,
+    0 0 42px #0fa,
+    0 0 82px #0fa,
+    0 0 92px #0fa,
+    0 0 102px #0fa,
+    0 0 151px #0fa;
+    }
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Styling for the dropdown button itself */
+
+/* Styling for the dropdown container */
+.dropdown-content {
+  position: absolute;
+  display: none;
+  background-color: #fff;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+/* Styling for the main genres */
+.main-genre > a {
+  display: block;
+  color: #333;
+  padding: 8px 16px;
+  text-decoration: none;
+}
+
+/* Styling for the main genres when hovering */
+.main-genre:hover > a {
+  background-color: #f2f2f2;
+}
+
+/* Styling for the sub-genres container */
+.sub-genres {
+  display: none;
+  background-color: #f2f2f2;
+  padding: 4px 0;
+  position: absolute;
+  top: 0;
+  left: 100%;
+  z-index: 2;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+/* Styling for the sub-genres items */
+.sub-genres li {
+  display: block;
+}
+
+/* Show sub-genres when hovering over main genre */
+.main-genre:hover .sub-genres {
+  display: block;
+}
+
+.but {
+    background-color: #00ffd9; 
+    color: #0a0a0a; 
+    padding: 8px 20px;
+    border: solid var(--black);
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-left: 15px;
+    font-size: large;
+    font-weight: 600;
+}
+
+@media (min-width:768px){
+            .catainer{
+              display: none;
+            }
+          }
+
+.but:hover {
+    background-color: var(--citrine); /* Set your desired background color on hover */
+}
+</style>
+ <script>
+   function searchMovies() {
+        const searchedValue = document.getElementById('searched').value.trim();
+        if (searchedValue.length > 0) {
+            window.location.href = `{% url 'websiteapp:search' %}?searched=${encodeURIComponent(searchedValue)}`;
+        }
+    }
+ </script>
+
+<script>
+  function showProfilePicture(element) {
+var src = element.src;
+var enlargedDiv = document.createElement("div");
+enlargedDiv.className = "profile-picture-enlarged";
+enlargedDiv.onclick = hideProfilePicture;
+
+var img = document.createElement("img");
+img.src = src;
+
+enlargedDiv.appendChild(img);
+document.body.appendChild(enlargedDiv);
+}
+
+function hideProfilePicture() {
+var enlargedDiv = document.querySelector(".profile-picture-enlarged");
+enlargedDiv.parentNode.removeChild(enlargedDiv);
+}
+
+</script>
+
+<style>
+.profile-picture{
+width: 200px;
+height: 200px;
+border-radius: 50%;
+object-fit: cover;
+margin-right: 20px;
+}
+.profile-picture-fav{
+width: 45px;
+height: 45px;
+border-radius: 50%;
+object-fit: cover;
+margin-left: 15px;
+}
+.user-info {
+display: flex;
+align-items: center;
+}
+
+.user-info h3 {
+margin-right: 10px;
+margin-bottom: 0;
+}
+.flex-container {
+display: flex;
+}
+
+.service-subtitle-pf {
+position: relative;
+color: var(--gainsboro);
+font-size: var(--fs-15);
+font-weight: var(--fw-500);
+text-transform: uppercase;
+letter-spacing: 3px;
+padding-left: 70px;
+margin-bottom: 10px;
+}
+.service-subtitle-pf::before {
+content: "";
+position: absolute;
+top: 10px;
+left: 2px;
+width: 50px;
+height: 3px;
+background: var(--citrine);
+}
+
+.bio-container {
+background-color: #f2f2f2;
+padding: 20px;
+border-radius: 8px;
+box-shadow: 0 2px 4px rgb(0, 0, 0);
+}
+
+.bio-container h2 {
+font-size: 24px;
+color: #171616c6;
+margin-bottom: 10px;
+}
+
+.bio-container .bio-text {
+font-size: 16px;
+line-height: 1.5;
+color: #000000;
+font-weight: bold;
+}
+
+
+.profile-picture-container {
+position: relative;
+cursor: pointer;
+}
+
+.profile-picture-enlarged {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0, 0, 0, 0.8);
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 9999;
+}
+
+.profile-picture-enlarged img {
+max-width: 80%;
+max-height: 80%;
+object-fit: contain;
+}
+
+</style>
+  <!-- 
+    - custom js link
+  -->
+
+  <script >$(document).ready(function() {
+    $('#movieCarousel').slick({
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      arrows: true,
+      dots: true,
+      infinite: true,
+      autoplay: false,
+      autoplaySpeed: 3000,
+      responsive: [
+        {
+          breakpoint: 768,
+          settings: {
+            slidesToShow: 1,
+            slidesToScroll: 1,
+          }
+        }
+      ]
+    });
+  });</script>
+  <script src="{% static 'ass/assets/js/script.js' %}"></script>
+  <script src="{% static 'ass/assets/js/cards.js' %}"></script>
+  <script src="{% static 'ass/assets/js/slick.js' %}"></script>
+  <!-- 
+    - ionicon link
+  -->
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.slick/1.8.1/slick.min.js"></script>
+
+</body>
+
+</html>
+

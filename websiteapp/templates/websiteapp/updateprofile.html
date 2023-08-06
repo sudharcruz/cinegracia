@@ -1,0 +1,274 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile-Update</title>
+
+  <!-- 
+    - favicon
+  -->
+  <link rel="shortcut icon" href="{% static 'cinelogo.png' %}" type="image">
+
+  <!-- 
+    - custom css link
+  -->
+  <link rel="stylesheet" href="{% static 'ass/css/style.css' %}" type="text/css">
+  <link rel="stylesheet" href="{% static 'ass/css/bootstrap.min.css' %}" type="text/css">
+  
+  
+
+
+  <!-- 
+    - google font link
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body id="top">
+
+
+  <!-- 
+    - #HEADER
+  -->
+
+    <header class="header" data-header>
+        <div class="container">
+
+        
+
+        <a href="/" class="logo">
+            <div class="coontainer">
+            <img src="{% static 'cinelogo.png'%}" alt="Cinegracia" width="75" height="75" >
+            <p class="hero-subtitle-for">Cinegracia</p>
+            </div>
+            <style>
+            .coontainer{
+                display: flex;
+                align-items: center;
+                margin-right: 10px;
+            }
+            .hero-subtitle-for {
+                margin-right: 20px;
+                color: var(--citrine);
+                font-size: var(--fs-4);
+                font-weight: var(--fw-700);
+                margin-bottom: 0px;
+                margin-left: 5px;
+                }
+
+            </style>
+        </a>
+
+        <div class="header-actions">
+
+            <button class="search-btn">
+            <ion-icon name="search-outline"></ion-icon>
+            </button>
+
+            <div class="lang-wrapper">
+            <label for="language">
+                <ion-icon name="globe-outline"></ion-icon>
+            </label>
+            </div>
+        {% if user.is_authenticated %}
+            <li><a class="btn btn-primary" href="{% url  'register:logout'  %}">Logout</a></li>
+        {% else %}
+        <li><a class="btn btn-primary" href="{% url 'register:register' %}">Sign-Up</a></li>
+        {% endif %}
+            </ul>
+        </div>
+
+        <button class="menu-open-btn" data-menu-open-btn>
+            <ion-icon name="reorder-two"></ion-icon>
+        </button>
+
+        <nav class="navbar" data-navbar>
+            <ul class="navbar-list">
+
+                <div class="title-wrapper">
+                <a class="hero-subtitle-for">Update Profile</a>
+                </div>
+
+        </nav>
+
+        </div>
+    </header>
+    
+        <section class="upcoming">
+        <br>
+        <style>
+            .upcoming {
+                    background: url("{%static 'ass/assets/images/upcoming-bg.png' %}") no-repeat;
+                    background-size: cover;
+                    background-position: center;
+                    padding-block: var(--section-padding);
+            }
+            
+        </style>
+        <div class="container" >
+            
+            
+                
+                
+                        {% if user.is_authenticated %}
+                        
+                        <div class="form-group" style="text-align: center;">
+                          <form action="{% url 'websiteapp:update-profile' pk=user.id %}" method="post" enctype="multipart/form-data">
+                              {% csrf_token %}
+                              
+                              {% for field in form %}
+                                
+                                  <label for="{{ field.id_for_label }}" style="color: gold;">{% if field.label %}{{ field.label }}:{% endif %}</label>
+                                  {{ field }} <br>
+                                
+                              {% endfor %}
+
+                              <button class="btn btn-success">Update Profile</button>
+                          </form>
+                        </div>
+                      <style>
+                        @media (max-width:768px){
+                        .form-control{
+                          max-width: 100%; margin-left: auto; margin-right: auto; margin-bottom: 5px;
+                        }
+                      }
+                        
+                      
+                      </style>
+                        
+                        {% endif %}
+               
+            
+        </div>
+        </section>
+  <footer class="footer">
+
+    <div class="footer-top">
+      <style>
+
+
+
+        .footer-top {
+  background: url("{%static 'ass/assets/images/footer-bg.jpg' %}") no-repeat;
+  background-size: cover;
+  background-position: center;
+  padding-block: 80px 50px;
+}
+
+      </style>
+      <div class="container">
+
+        <div class="footer-brand-wrapper">
+
+          <a href="/" class="logo">
+            <div class="coontainer">
+            <img src="{% static 'cinelogo.png'%}" alt="Cinegracia" width="75" height="75" >
+            <p class="hero-subtitle-for">Cinegracia</p>
+            </div>
+          </a>
+          <ul class="footer-list">
+
+            <li>
+              <a href="/" class="footer-link">Home</a>
+            </li>
+
+            <li>
+              <a href="#" class="footer-link">Movie</a>
+            </li>
+
+            <li>
+              <a href="#" class="footer-link">TV Show</a>
+            </li>
+
+            <li>
+              <a href="#" class="footer-link">Web Series</a>
+            </li>
+
+            <li>
+              <a href="#" class="footer-link">Pricing</a>
+            </li>
+
+          </ul>
+
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="quicklink-wrapper">
+
+          <ul class="quicklink-list">
+
+            <li>
+              <a href="#" class="quicklink-link">Faq</a>
+            </li>
+
+            <li>
+              <a href="#" class="quicklink-link">Help center</a>
+            </li>
+
+            <li>
+              <a href="#" class="quicklink-link">Terms of use</a>
+            </li>
+
+            <li>
+              <a href="#" class="quicklink-link">Privacy</a>
+            </li>
+
+          </ul>
+
+          <ul class="social-list">
+
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-facebook"></ion-icon>
+              </a>
+            </li>
+
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-twitter"></ion-icon>
+              </a>
+            </li>
+
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-pinterest"></ion-icon>
+              </a>
+            </li>
+
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-linkedin"></ion-icon>
+              </a>
+            </li>
+
+          </ul>
+
+        </div>
+
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container">
+
+        <p class="copyright">
+          &copy; 2022 <a href="#">sudharcruz</a>. All Rights Reserved
+        </p>
+
+        <img src="{% static 'ass/assets/images/footer-bottom-img.png' %}" alt="Online banking companies logo" class="footer-bottom-img">
+
+      </div>
+    </div>
+
+  </footer>
+  <script src="{% static 'ass/assets/js/script.js' %}"></script>
+
+</body>
+</html>

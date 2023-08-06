@@ -1,0 +1,404 @@
+{% extends 'websiteapp/allshows.html' %}
+{%  load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% block title %}
+    Cinegracia - Profile Section 
+  {% endblock %}
+  <link rel="stylesheet" href="{% static 'ass/css/style.css' %}" type="text/css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.css">
+
+</head>
+<body>
+
+    <header class="header" data-header>
+      <div class="container">
+  
+        
+  
+        <a href="/" class="logo">
+          <div class="coontainer">
+          <img src="{% static 'cinelogo.png'%}" alt="Cinegracia" width="75" height="75" >
+          <p class="hero-subtitle-for">Cinegracia</p>
+          </div>
+          <style>
+            .coontainer{
+              display: flex;
+              align-items: center;
+              margin-right: 10px;
+            }
+            .hero-subtitle-for {
+                margin-right: 20px;
+                color: var(--citrine);
+                font-size: var(--fs-4);
+                font-weight: var(--fw-700);
+                margin-bottom: 0px;
+                margin-left: 5px;
+              }
+  
+          </style>
+        </a>
+        <button class="menu-open-btn" data-menu-open-btn>
+          <ion-icon name="reorder-two"></ion-icon>
+        </button>
+  
+        <nav class="navbar" data-navbar>
+  
+          <div class="navbar-top">
+  
+            <a href="/" class="logo">
+              <div class="coontainer">
+              <img src="{% static 'cinelogo.png'%}" alt="Cinegracia" width="75" height="75" >
+              <p class="hero-subtitle-for">Cinegracia</p>
+              </div>
+            </a>
+  
+            <button class="menu-close-btn" data-menu-close-btn>
+              <ion-icon name="close-outline"></ion-icon>
+            </button>
+            
+          </div>
+          <ul class="navbar-list">
+            
+            <li>
+              
+              <a class="navbar-link" href="/" >Home</a>
+            </li>
+            
+          
+              <li>
+                <div class="container" style="padding: 20px; box-sizing: border-box; flex-wrap: wrap;">
+                  <a class="hero-subtitle-for" style="flex-basis: 100%; text-align:center;" >Hey {{user.username}}!!</a>
+                  <a class="hero-subtitle-for" style="flex-basis: 100%; text-align: center;">Here's Your Profile</a>
+                </div>
+                
+              </li>
+            
+        
+          </ul>
+  
+          <div class="lang-wrapper">
+            <label for="language">
+              <ion-icon name="globe-outline"></ion-icon>
+            </label>
+          </div>
+          </ul>
+  
+  
+  
+        </div>
+  
+        <nav class="navbar" data-navbar>
+  
+        
+        </nav>
+  
+      </div>
+    </header>
+    
+  
+
+  {% block content %}
+        <div class="container">
+          <div id="favourite-section" style="display: flex; flex-wrap: wrap;">
+            <div style="flex: 1; max-width: 100%;box-sizing: border-box;">
+              <p class="service-subtitle-pf">Profile Picture</p><br>
+              <div class="profile-picture-container">
+                {% if user.profile.dp %}
+                  <img class="profile-picture" src="{{user.profile.dp.url}}" onclick="showProfilePicture(this)"> <br>
+                {% else %}
+                  <img class="profile-picture" src="{% static 'ass/assets/images/default_dp.jpeg' %}" alt="" onclick="showProfilePicture(this)"> <br>
+                {% endif %}
+              </div><br><br><br>
+              
+              <h2 class="service-subtitle-pf">Your Rated Movies</h2> <br>
+              {% for rate in myrate %}
+                {% if request.user == rate.user %}
+                  <div class="user-info">
+                    <h3 class="section-subtitle"><strong>{{rate.movie_name}}:</strong></h3>
+                    <p style="color: white;mix-blend-mode: difference;">{{rate.rating}}</p><br>
+                  </div><br>
+                {% endif %}
+              {% endfor %} 
+            </div>
+            
+            <div style="flex: 1.5; max-width: 100%; box-sizing: border-box;">
+              <h2 class="service-subtitle-pf" style="margin-top: 0;">Basic Information</h2>
+              <div class="user-info" style="display: flex; flex-wrap: wrap;">
+                <h3 class="section-subtitle" style="flex-basis: 150px;"><strong>Username:</strong></h3>
+                <h3 class="card-title" style="color: white; mix-blend-mode: difference; flex-grow: 1;">{{user.username}}</h3>
+              </div>
+              <div class="user-info" style="display: flex; flex-wrap: wrap;">
+                <h3 class="section-subtitle" style="flex-basis: 150px;"><strong>First Name:</strong></h3>
+                <h3 class="card-title" style="color: white; mix-blend-mode: difference; flex-grow: 1;">{{user.first_name}}</h3>
+              </div>
+              <div class="user-info" style="display: flex; flex-wrap: wrap;">
+                <h3 class="section-subtitle" style="flex-basis: 150px;"><strong>Last Name:</strong></h3>
+                <h3 class="card-title" style="color: white; mix-blend-mode: difference; flex-grow: 1;">{{user.last_name}}</h3>
+              </div>
+              <div class="user-info" style="display: flex; flex-wrap: wrap;">
+                <h3 class="section-subtitle" style="flex-basis: 150px;"><strong>Email:</strong></h3>
+                <h3 class="card-title" style="color: white; mix-blend-mode: difference; flex-grow: 1;">{{user.email}}</h3>
+              </div>
+              <br>
+              <center>
+              <div class="user-info">
+                <h3 class="section-subtitle"><strong>Social-Media:</strong></h3>
+                <ul class="social-list">
+                
+                {% if user.profile.fb_url or user.profile.twitter_url or user.profile.insta_url or user.profile.youtube_url or user.profile.github_url %}
+                  {% if user.profile.fb_url %}
+                    <li>
+                      <a href="{{user.profile.fb_url}}" class="navbar-social-link" style="margin-left: 20px;">
+                        <ion-icon name="logo-facebook"></ion-icon>
+                      </a>
+                    </li> |
+                  {% endif %}
+                  {% if user.profile.twitter_url %}
+                    <li>
+                      <a href="{{user.profile.twitter_url}}" class="navbar-social-link">
+                        <ion-icon name="logo-twitter"></ion-icon>
+                      </a>
+                    </li> |
+                  {% endif %}
+                  {% if user.profile.insta_url %}
+                    <li>
+                      <a href="{{user.profile.insta_url}}" class="navbar-social-link">
+                        <ion-icon name="logo-instagram"></ion-icon>
+                      </a>
+                    </li> |
+                  {% endif %}
+                  {% if user.profile.youtube_url %}
+                    <li>
+                      <a href="{{user.profile.youtube_url}}" class="navbar-social-link">
+                        <ion-icon name="logo-youtube"></ion-icon>
+                      </a>
+                    </li> |
+                  {% endif %}
+                  {% if user.profile.github_url %}
+                    <li>
+                      <a href="{{user.profile.github_url}}" class="navbar-social-link">
+                        <ion-icon name="logo-github"></ion-icon>
+                      </a>
+                    </li> |
+                  {% endif %}
+                {% else %}
+                    <h3 class="card-title" style="color: white;"> <small>No Social-Media Linked</small></h3>
+                {% endif %}
+      
+                </ul>
+              </div>
+              
+              </center>
+            
+              <br><br><br>
+              <h2 class="service-subtitle-pf" >Your All Comments</h2> <br>
+                {% for com in comment %} 
+                    {% if request.user == com.user %}
+                      <div class="user-info">
+                        <h3 class="section-subtitle"><strong>{{com.movie_name}}:</strong></h3>
+                        <h2 class="card-title" style="color: white; mix-blend-mode: difference"> {{com.text}}</h2> <br>
+                      </div><br>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div style="flex: 0.7;max-width: 100%;box-sizing: border-box;">
+              
+                <h2 class="service-subtitle-pf" >Favourite-List</h2> <br>
+                <div class="scroll-container">
+                  <div class="movies-list has-scrollbar">
+                    {% for fav in fav_list %}
+                      <div class="user-info">
+                        <a class="card-title" href="{% url 'websiteapp:movie-details' fav.title  fav.id %}"  style="color: white;"> <strong>{{fav.title}} : </strong></a><br>
+                        <br><img class="profile-picture-fav" src="{{ fav.poster_path }}"  alt="{{ fav.title }}">
+                      </div><br><br>|
+                    {% endfor %} <br>
+                  </div>
+                </div>
+                <br><br><br>
+                <h2 class="service-subtitle-pf" >Bio</h2> <br>
+                <div class="bio-container">
+                
+                    <p class="bio-text">{{user.profile.bio}}</p>
+                  
+                </div>
+                
+            </div>
+            
+          </div>
+        </div>
+        <style>
+
+
+        </style>
+        <script>
+          function showProfilePicture(element) {
+  var src = element.src;
+  var enlargedDiv = document.createElement("div");
+  enlargedDiv.className = "profile-picture-enlarged";
+  enlargedDiv.onclick = hideProfilePicture;
+
+  var img = document.createElement("img");
+  img.src = src;
+
+  enlargedDiv.appendChild(img);
+  document.body.appendChild(enlargedDiv);
+}
+
+function hideProfilePicture() {
+  var enlargedDiv = document.querySelector(".profile-picture-enlarged");
+  enlargedDiv.parentNode.removeChild(enlargedDiv);
+}
+
+        </script>
+  <style>
+    @media (max-width:768px){
+    .container{
+      padding: 10px;
+    }
+    .hero-subtitle-for{
+      color: var(--citrine);
+      font-size: var(--fs-4);
+      font-weight: var(--fw-700);
+      margin-bottom: 10px;
+      text-align: center;
+      flex-basis: 100%;
+    }
+  }
+  </style>
+  <style>
+    .profile-picture{
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 20px;
+}
+.profile-picture-fav{
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-left: 15px;
+}
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.user-info h3 {
+  margin-right: 10px;
+  margin-bottom: 0;
+}
+.flex-container {
+  display: flex;
+}
+
+.flex-item-1 {
+  flex: 1.5;
+}
+.flex-item-2 {
+  flex: 0.5;
+}
+.flex-item-3 {
+  flex: 2.5;
+}
+.service-subtitle-pf {
+position: relative;
+color: var(--gainsboro);
+font-size: var(--fs-15);
+font-weight: var(--fw-500);
+text-transform: uppercase;
+letter-spacing: 3px;
+padding-left: 70px;
+margin-bottom: 10px;
+}
+.service-subtitle-pf::before {
+content: "";
+position: absolute;
+top: 10px;
+left: 2px;
+width: 50px;
+height: 3px;
+background: var(--citrine);
+}
+
+.bio-container {
+background-color: #f2f2f2;
+padding: 20px;
+border-radius: 8px;
+box-shadow: 0 2px 4px rgb(0, 0, 0);
+}
+
+.bio-container h2 {
+font-size: 24px;
+color: #171616c6;
+margin-bottom: 10px;
+}
+
+.bio-container .bio-text {
+font-size: 16px;
+line-height: 1.5;
+color: #000000;
+font-weight: bold;
+}
+
+.movies-list {
+max-height: 225px; /* Adjust the height as per your requirements */
+overflow-y: scroll;
+}
+
+.scroll-container {
+overflow: hidden;
+}
+
+.has-scrollbar::-webkit-scrollbar { height: 8px; }
+
+.has-scrollbar::-webkit-scrollbar-track {
+background: transparent;
+box-shadow: 0 0 0 2px var(--citrine);
+border-radius: 10px;
+}
+
+.has-scrollbar::-webkit-scrollbar-thumb {
+background: var(--gainsboro);
+border-radius: 10px;
+box-shadow: inset 0 1px 0 var(--black),
+    inset 0 -1px 0 var(--black);
+}
+
+.profile-picture-container {
+position: relative;
+cursor: pointer;
+}
+
+.profile-picture-enlarged {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0, 0, 0, 0.8);
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 9999;
+}
+
+.profile-picture-enlarged img {
+max-width: 80%;
+max-height: 80%;
+object-fit: contain;
+}
+
+  </style>
+  {% endblock %}
+  <script src="{% static 'ass/assets/js/script.js' %}"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,197 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ user.username }}</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #0000005f;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgb(0, 0, 0);
+      display: flex;
+    }
+
+    .profile-picture {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 20px;
+    }
+
+    .user-info {
+      flex-grow: 1;
+    }
+
+    .user-info h2 {
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+
+    .user-info p {
+      color: #888;
+      margin-bottom: 10px;
+    }
+
+    .bio {
+      margin-bottom: 20px;
+    }
+
+    .bio h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .favorites {
+      margin-bottom: 20px;
+    }
+
+    .favorites h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .favorites ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .favorites li {
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+
+    .favorites img {
+      width: 100px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 5px;
+    }
+
+    .comments {
+      margin-bottom: 20px;
+    }
+
+    .comments h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .comments ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .comments li {
+      margin-bottom: 10px;
+    }
+
+    .comments .comment {
+      background-color: #f9f9f9;
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    .reviews {
+      margin-bottom: 20px;
+    }
+
+    .reviews h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .reviews ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .reviews li {
+      margin-bottom: 10px;
+    }
+
+    .reviews .review {
+      background-color: #f9f9f9;
+      padding: 10px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    {% if user.profile.dp %}
+        <img class="profile-picture" src="{{ user.profile.dp.url }}" alt="Profile Picture">
+    {% else %}
+        <img class="profile-picture" src="{% static 'ass/assets/images/default_dp.jpeg' %}" alt="Default Profile Picture">
+    {% endif %}
+
+    <div class="user-info">
+      <h2>{{ user.username }}</h2>
+      <p></p>
+      <div class="bio">
+        <h3>Bio</h3>
+        <p>{{ user.profile.bio }}</p>
+      </div>
+
+      <div class="favorites">
+        <h3>Favorite Movies</h3>
+        <ul>
+          {% for fav in favouritelist %}
+            <li>
+              <img class="profile-picture" src="{{ fav.movieimage.url }}" alt="{{ fav.title }}">
+              <p>{{ fav.title }}</p>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="comments">
+        <h3>Comments</h3>
+        <ul>
+          {% for com in comment %}
+            {% if request.user == com.user %}
+              <li>
+                <div class="comment">
+                  <p>{{ com.Post }}: {{ com.usercomments }}</p>
+                </div>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="reviews">
+        <h3>Reviews</h3>
+        <ul>
+          {% for rate in myrate %}
+            {% if request.user == rate.user %}
+              <li>
+                <div class="review">
+                  <p>{{ rate.ratingpost }}: {{ rate.rating }}</p>
+                </div>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

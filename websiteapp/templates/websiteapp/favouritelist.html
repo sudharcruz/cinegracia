@@ -1,0 +1,392 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+{% block header %}
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cinegracia - FavouriteList</title>
+
+  <!-- 
+    - favicon
+  -->
+  <link rel="shortcut icon" href="{% static 'cinelogo.png' %}" type="image">
+
+  <!-- 
+    - custom css link
+  -->
+  <link rel="stylesheet" href="{% static 'ass/css/style.css' %}">
+  
+
+
+  <!-- 
+    - google font link
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body id="top">
+
+  <!-- 
+    - #HEADER
+  -->
+
+  <header class="header" data-header>
+    <div class="container">
+
+      
+
+      <a href="/" class="logo">
+        <div class="coontainer">
+        <img src="{% static 'cinelogo.png'%}" alt="Cinegracia" width="75" height="75" >
+        <p class="hero-subtitle-for">Cinegracia</p>
+        </div>
+        <style>
+          .coontainer{
+            display: flex;
+            align-items: center;
+            margin-right: 10px;
+          }
+          .hero-subtitle-for {
+              margin-right: 20px;
+              color: var(--citrine);
+              font-size: var(--fs-4);
+              font-weight: var(--fw-700);
+              margin-bottom: 0px;
+              margin-left: 5px;
+            }
+
+        </style>
+      </a>
+
+      <div class="header-actions">
+
+        <button class="search-btn">
+          <ion-icon name="search-outline"></ion-icon>
+        </button>
+
+        <div class="lang-wrapper">
+          <label for="language">
+            <ion-icon name="globe-outline"></ion-icon>
+          </label>
+        </div>
+      {% if user.is_authenticated %}
+        <li><a class="btn btn-primary" href="{% url  'logout'  %}">Logout</a></li>
+      {% else %}
+      <li><a class="btn btn-primary" href="{% url 'register:register' %}">Sign-Up</a></li>
+      {% endif %}
+        </ul>
+
+        
+
+      </div>
+
+      <button class="menu-open-btn" data-menu-open-btn>
+        <ion-icon name="reorder-two"></ion-icon>
+      </button>
+
+      <nav class="navbar" data-navbar>
+
+        <div class="navbar-top">
+
+          <a href="/" class="logo">
+            <div class="coontainer">
+            <img src="{% static 'cinelogo.png'%}" alt="Cinegracia" width="75" height="75" >
+            <p class="hero-subtitle-for">Cinegracia</p>
+            </div>
+          </a>
+
+          <button class="menu-close-btn" data-menu-close-btn>
+            <ion-icon name="close-outline"></ion-icon>
+          </button>
+          
+        </div>
+
+        <ul class="navbar-list">
+          
+            <li>
+              
+              <a class="navbar-link" href="/" >Home</a>
+            </li>
+{% endblock %}
+      <nav class="navbar" data-navbar>
+
+      
+        <ul class="navbar-list">
+
+          <div class="title-wrapper">
+            <a class="hero-subtitle-for">Your Favourite Movie-Series List</a>
+          </div>
+
+      </nav>
+
+    </div>
+  </header>
+
+
+ 
+
+
+  <main>
+    <article>
+
+     <!-- 
+        - #UPCOMING
+      -->
+
+      <section class="upcoming">
+        <style>
+          .upcoming {
+                  background: url("{%static 'ass/assets/images/upcoming-bg.png' %}") no-repeat;
+                  background-size: cover;
+                  background-position: center;
+                  padding-block: var(--section-padding);
+                  object-fit: none;
+          }
+
+        </style>
+
+  
+      <section class="top-rated">
+      <center>
+        <h2 class="h2 section-title">Your FavouriteList</h2>
+      </center>
+      <br>
+        <div class="container">
+
+          <ul class="movies-list">
+      {% if fav_list %}
+          {% for det in fav_list %}
+            <li>
+              <div class="movie-card">
+        
+                <a href="{%  url 'websiteapp:movie-details' det.title det.id %}">
+                  <figure class="card-banner">
+                    <img src="{{det.poster_path}}" alt="Sonic the Hedgehog 2 movie poster">
+                  </figure>
+                </a>
+
+                <div class="title-wrapper">
+                  <a href="{%  url 'websiteapp:movie-details' det.title det.id %}">
+                    <h3 class="card-title">{{det.title}}</h3>
+                  </a>
+
+                  <time datetime="2022">{{det.release_date}}</time>
+                </div>
+
+                <div class="card-meta">
+                  <div class="badge badge-outline">2K</div>
+
+                  <div class="duration">
+                    <ion-icon name="time-outline"></ion-icon>
+
+                    <time datetime="PT122M">{{det.popularity}}</time>
+                  </div>
+
+                  <div class="rating">
+                    <ion-icon name="star"></ion-icon>
+
+                    <data>{{det.vote_average}}</data>
+                  </div>
+                </div>
+
+              </div>
+            </li>
+          {% endfor %}
+      {% endif %}
+        </div>
+      </section>
+{% block content %}
+      <section class="cta">
+        <style>
+          .cta {
+  background: url("{%static 'ass/assets/images/cta-bg.jpg' %}") no-repeat;
+  background-size: cover;
+  background-position: center;
+  text-align: center;
+  padding-block: 50px;
+}
+
+        </style>
+        <div class="container">
+
+          <div class="title-wrapper">
+            <h2 class="cta-title">Trial start first 30 days.</h2>
+
+            <p class="cta-text">
+              Enter your email to create or restart your membership.
+            </p>
+          </div>
+
+          <form action="" class="cta-form">
+            <input type="email" name="email" required placeholder="Enter your email" class="email-field">
+
+            <button type="submit" class="cta-form-btn">Get started</button>
+          </form>
+
+        </div>
+      </section>
+
+    </article>
+  </main>
+
+
+
+
+
+  <!-- 
+    - #FOOTER
+  -->
+
+  <footer class="footer">
+
+    <div class="footer-top">
+      <style>
+        .footer-top {
+  background: url("{%static 'ass/assets/images/footer-bg.jpg' %}") no-repeat;
+  background-size: cover;
+  background-position: center;
+  padding-block: 80px 50px;
+}
+
+      </style>
+      <div class="container">
+
+        <div class="footer-brand-wrapper">
+
+          <a href="/" class="logo">
+            <div class="coontainer">
+            <img src="{% static 'cinelogo.png'%}" alt="Cinegracia" width="75" height="75" >
+            <p class="hero-subtitle-for">Cinegracia</p>
+            </div>
+          </a>
+          <ul class="footer-list">
+
+            <li>
+              <a href="/" class="footer-link">Home</a>
+            </li>
+
+            <li>
+              <a href="#" class="footer-link">Movie</a>
+            </li>
+
+            <li>
+              <a href="#" class="footer-link">TV Show</a>
+            </li>
+
+            <li>
+              <a href="#" class="footer-link">Web Series</a>
+            </li>
+
+          </ul>
+
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="quicklink-wrapper">
+
+          <ul class="quicklink-list">
+
+            <li>
+              <a href="#" class="quicklink-link">Faq</a>
+            </li>
+
+            <li>
+              <a href="#" class="quicklink-link">Help center</a>
+            </li>
+
+            <li>
+              <a href="#" class="quicklink-link">Terms of use</a>
+            </li>
+
+            <li>
+              <a href="#" class="quicklink-link">Privacy</a>
+            </li>
+
+          </ul>
+
+          <ul class="social-list">
+
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-facebook"></ion-icon>
+              </a>
+            </li>
+
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-twitter"></ion-icon>
+              </a>
+            </li>
+
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-pinterest"></ion-icon>
+              </a>
+            </li>
+
+            <li>
+              <a href="#" class="social-link">
+                <ion-icon name="logo-linkedin"></ion-icon>
+              </a>
+            </li>
+
+          </ul>
+
+        </div>
+
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container">
+
+        <p class="copyright">
+          &copy; 2022 <a href="#">sudharcruz</a>. All Rights Reserved
+        </p>
+
+        <img src="{% static 'ass/assets/images/footer-bottom-img.png' %}" alt="Online banking companies logo" class="footer-bottom-img">
+
+      </div>
+    </div>
+
+  </footer>
+  <style>
+    .movie-card :is(.duration, .rating) {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--gainsboro);
+  font-size: var(--fs-11);
+  font-weight: var(--fw-500);
+  }
+  
+  .movie-card :is(.duration, .rating) ion-icon {
+  font-size: 30px; /* Adjust the font-size value to your preference */
+  --ionicon-stroke-width: 2px; /* Adjust the stroke width value to your preference */
+  color: var(--citrine);
+  }
+  
+  </style>
+
+  <a href="#top" class="go-top" data-go-top>
+    <ion-icon name="chevron-up"></ion-icon>
+  </a>
+
+  <script src="{% static 'ass/assets/js/script.js' %}"></script>
+
+  <!-- 
+    - ionicon link
+  -->
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+{% endblock %}
+</body>
+
+</html>
